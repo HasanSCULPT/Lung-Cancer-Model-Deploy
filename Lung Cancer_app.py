@@ -1,3 +1,14 @@
+# 📁 Folder Structure:
+# Lung-Cancer-Model-Deploy/
+# ├─ lung_cancer_app.py
+# ├─ voting_clf.pkl
+# ├─ logo.png
+# └─ requirements.txt
+
+# =======================================
+# File: lung_cancer_app.py
+# =======================================
+
 import pandas as pd
 import joblib
 import numpy as np
@@ -6,22 +17,21 @@ import shap
 import streamlit as st
 from sklearn.inspection import permutation_importance
 
-# Load model and scaler
+# Load trained ensemble model
 voting_clf = joblib.load("voting_clf.pkl")
 
+# Streamlit app setup
 st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
 st.image("logo.png", width=100)
-st.title("🔬 Lung Cancer Prediction using Ensemble Model")
+st.title("\U0001F52C Lung Cancer Prediction using Ensemble Model")
 st.write("## By HasanSCULPT | DSA 2025")
 
-# Sidebar: Navigation
+# Sidebar Navigation
 page = st.sidebar.selectbox("Navigate", ["Prediction", "About", "Contact", "Terms"])
 
 if page == "Prediction":
-    st.sidebar.subheader("🔧 Adjust Classification Threshold")
+    st.sidebar.subheader("\U0001F527 Adjust Classification Threshold")
     threshold = st.sidebar.slider("Prediction Threshold", 0.0, 1.0, 0.5, 0.01)
-
-    # Sidebar: Upload data
     uploaded_file = st.sidebar.file_uploader("Upload your CSV data", type="csv")
 
     if uploaded_file is not None:
@@ -46,7 +56,8 @@ if page == "Prediction":
         st.write("### Prediction Results")
         st.dataframe(df_output[["Probability", "Prediction"]])
 
-        st.write("### 🔍 Prediction Probability Distribution")
+        # Probability chart
+        st.write("### \U0001F50D Prediction Probability Distribution")
         fig, ax = plt.subplots()
         ax.hist(proba, bins=10, edgecolor='k')
         ax.axvline(threshold, color='red', linestyle='--')
@@ -54,21 +65,11 @@ if page == "Prediction":
         ax.set_ylabel("Frequency")
         st.pyplot(fig)
 
-        st.write("### 📊 Precomputed Permutation Importance (Top Predictors)")
+        # Feature Importance
+        st.write("### \U0001F4CA Precomputed Permutation Importance (Top Predictors)")
         importance_data = {
-            "Feature": [
-                "SYMPTOM_SCORE", "LIFESTYLE_SCORE", "SHORTNESS OF BREATH",
-                "SWALLOWING DIFFICULTY", "ALCOHOL CONSUMING", "ANXIETY",
-                "COUGHING", "WHEEZING", "SMOKING", "GENDER", "AGE_GROUP_Senior",
-                "AGE", "YELLOW_FINGERS", "PEER_PRESSURE", "CHEST PAIN",
-                "LIFESTYLE_RISK", "ALLERGY", "FATIGUE", "AGE_GROUP_Middle-aged", "CHRONIC DISEASE"
-            ],
-            "Importance": [
-                6.290323e-02, 3.709677e-02, 2.741935e-02, 2.580645e-02, 2.419355e-02,
-                2.419355e-02, 2.096774e-02, 1.935484e-02, 1.935484e-02, 1.129032e-02,
-                9.677419e-03, 9.677419e-03, 8.064516e-03, 8.064516e-03, 4.838710e-03,
-                1.612903e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00, -2.220446e-17
-            ]
+            "Feature": ["SYMPTOM_SCORE", "LIFESTYLE_SCORE", "SHORTNESS OF BREATH", "SWALLOWING DIFFICULTY", "ALCOHOL CONSUMING", "ANXIETY", "COUGHING", "WHEEZING", "SMOKING", "GENDER", "AGE_GROUP_Senior", "AGE", "YELLOW_FINGERS", "PEER_PRESSURE", "CHEST PAIN", "LIFESTYLE_RISK", "ALLERGY", "FATIGUE", "AGE_GROUP_Middle-aged", "CHRONIC DISEASE"],
+            "Importance": [0.0629, 0.0371, 0.0274, 0.0258, 0.0242, 0.0242, 0.0210, 0.0194, 0.0194, 0.0113, 0.0097, 0.0097, 0.0081, 0.0081, 0.0048, 0.0016, 0.0, 0.0, 0.0, -2.2e-17]
         }
         importance_df = pd.DataFrame(importance_data).sort_values(by="Importance", ascending=True)
         fig3, ax3 = plt.subplots(figsize=(6, 6))
@@ -77,7 +78,8 @@ if page == "Prediction":
         ax3.set_title("Permutation Importance (Precomputed)")
         st.pyplot(fig3)
 
-        st.write("### 🧠 SHAP Explanation (Random Forest)")
+        # SHAP Explanation
+        st.write("### \U0001F9E0 SHAP Explanation (Random Forest)")
         explainer = shap.TreeExplainer(voting_clf.named_estimators_["rf"])
         shap_values = explainer.shap_values(df_input)
         st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -85,8 +87,9 @@ if page == "Prediction":
         st.pyplot()
 
     else:
-        st.info("⬅️ Upload a CSV file to start prediction")
+        st.info("\u2b05\ufe0f Upload a CSV file to start prediction")
 
+    # Individual Prediction
     st.write("---")
     st.write("### Or Enter Individual Patient Information")
     age = st.number_input("Age", 0, 100, 50)
@@ -119,16 +122,14 @@ if page == "Prediction":
         st.success(f"Predicted: {'Lung Cancer' if pred==1 else 'No Lung Cancer'} (Probability: {prob:.2f})")
 
 elif page == "About":
-    st.title("📘 About Us")
-    st.write("This lung cancer diagnostic app is developed By HasanSCULPT to assist in preliminary lung cancer risk prediction using an ensemble ensemble of Random Forest, Logistic Regression and optionally SVCmachine learning model based on patient lifestyle and symptom data It is built for educational and clinical support purposes..")
+    st.title("\U0001F4D8 About Us")
+    st.write("This lung cancer diagnostic app is developed By HasanSCULPT to assist in preliminary lung cancer risk prediction using an ensemble of Random Forest, Logistic Regression, and SVC based on patient lifestyle and symptom data.")
 
 elif page == "Contact":
-    st.title("📧 Contact Us")
+    st.title("\U0001F4E7 Contact Us")
     st.write("Phone: +234-456-7890")
-    st.write("For questions or feedback, email us at: support@lungdiagnosis.ai")
+    st.write("Email: support@lungdiagnosis.ai")
 
 elif page == "Terms":
-    st.title("📜 Terms & Conditions")
-    st.write("This tool is intended for educational or preliminary diagnostic use only and not as a substitute for professional medical advice. Always consult a certified medical professional for clinical decisions.")
-
-
+    st.title("\U0001F4DC Terms & Conditions")
+    st.write("This tool is intended for educational or preliminary diagnostic use only and not a substitute for professional medical advice. Always consult a medical professional.")
