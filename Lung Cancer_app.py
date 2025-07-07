@@ -24,7 +24,7 @@ scaler = joblib.load('scaler.pkl')
 # Streamlit app setup
 st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
 st.image("logo.png", width=100)
-st.title("\U0001F52C Lung Cancer Prediction using Ensemble Model")
+st.title("\U0001F52C Lung Cancer Diagnostics Centre")
 st.write("## By HasanSCULPT | DSA 2025")
 
 # Sidebar Navigation
@@ -124,7 +124,7 @@ if page == "Prediction":
 
 elif page == "About":
     st.title("\U0001F4D8 About Us")
-    st.write("This lung cancer diagnostic app is developed By HasanSCULPT to assist in preliminary lung cancer risk prediction using an ensemble of Random Forest, Logistic Regression, and SVC based on patient lifestyle and symptom data.")
+    st.write("This lung cancer diagnostic app is developed By HasanSCULPT to assist in preliminary lung cancer risk prediction using an ensemble of Random Forest, Logistic Regression, and SVC based on patient lifestyle and symptomatic data.")
 
 elif page == "Contact":
     st.title("\U0001F4E7 Contact Us")
