@@ -1,7 +1,7 @@
 # 📁 Folder Structure:
 # Lung-Cancer-Model-Deploy/
 # ├─ lung_cancer_app.py
-# ├─ voting_clf.pkl
+# ├─ lung_cancer_pipeline.pkl
 # ├─ logo.png
 # └─ requirements.txt
 
@@ -17,14 +17,13 @@ import shap
 import streamlit as st
 from sklearn.inspection import permutation_importance
 
-# Load trained ensemble model
-voting_clf = joblib.load("voting_clf.pkl")
-joblib.dump(voting_clf, 'voting_clf.pkl')
-scaler = joblib.load('scaler.pkl')
-# Streamlit app setup
+# Load trained full pipeline
+pipeline = joblib.load("lung_cancer_pipeline.pkl")
+
+# Streamlit UI setup
 st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
 st.image("logo.png", width=100)
-st.title("\U0001F52C Lung Cancer Diagnostics Centre")
+st.title("🔬 Lung Cancer Diagnostics Centre")
 st.write("## By HasanSCULPT | DSA 2025")
 
 # Sidebar Navigation
@@ -106,29 +105,58 @@ if page == "Prediction":
     age_group_senior = 1 if age > 60 else 0
 
     if st.button("Predict Individual"):
-        row = pd.DataFrame({
-            'AGE': [age], 'GENDER': [1 if gender == "Male" else 0],
-            'SMOKING': [smoking], 'ANXIETY': [anxiety], 'ALCOHOL CONSUMING': [alcohol],
-            'PEER_PRESSURE': [peer_pressure], 'COUGHING': [cough],
-            'SHORTNESS OF BREATH': [short_breath],
-            'SYMPTOM_SCORE': [symptom_score], 'LIFESTYLE_SCORE': [lifestyle_score],
-            'AGE_GROUP_Senior': [age_group_senior]
-        })
-        for col in voting_clf.named_estimators_["rf"].feature_names_in_:
-            if col not in row:
-                row[col] = 0
-        row = row[voting_clf.named_estimators_["rf"].feature_names_in_]
-        prob = voting_clf.predict_proba(row)[0][1]
-        pred = int(prob > threshold)
-        st.success(f"Predicted: {'Lung Cancer' if pred==1 else 'No Lung Cancer'} (Probability: {prob:.2f})")
+    row = pd.DataFrame({
+        'AGE': [age], 'GENDER': [1 if gender == "Male" else 0],
+        'SMOKING': [smoking], 'ANXIETY': [anxiety], 'ALCOHOL CONSUMING': [alcohol],
+        'PEER_PRESSURE': [peer_pressure], 'COUGHING': [cough],
+        'SHORTNESS OF BREATH': [short_breath],
+        'SYMPTOM_SCORE': [symptom_score], 'LIFESTYLE_SCORE': [lifestyle_score],
+        'AGE_GROUP_Senior': [age_group_senior]
+    })
+
+    # Fill missing columns
+    for col in pipeline.named_steps["model"].estimators[0].feature_names_in_:
+        if col not in row:
+            row[col] = 0
+    row = row[pipeline.named_steps["model"].estimators[0].feature_names_in_]
+
+    # Predict
+    prob = pipeline.predict_proba(row)[0][1]
+    pred = int(prob > threshold)
+
+    st.success(f"Predicted: {'Lung Cancer' if pred==1 else 'No Lung Cancer'} (Probability: {prob:.2f})")
+
+    # 📊 Differential bar chart using matplotlib
+    # Prediction Confidence Chart
+    st.subheader("📊 Prediction Confidence")
+    fig, ax = plt.subplots()
+    bars = ax.bar(["No Lung Cancer", "Lung Cancer"], [1 - prob, prob], color=["green", "red"])
+    ax.set_ylim(0, 1)
+    ax.set_ylabel("Probability")
+    ax.set_title("Prediction Confidence")
+    for bar in bars:
+        yval = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.02, f"{yval:.2f}", ha='center', va='bottom')
+    st.pyplot(fig)
+
+    # Export option
+        if st.button("Export Result"):
+            result_df = pd.DataFrame({"Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"], "Probability": [prob]})
+            st.download_button(
+                label="\U0001F4E5 Download Prediction as CSV",
+                data=result_df.to_csv(index=False),
+                file_name="individual_prediction.csv",
+                mime="text/csv"
+            )   
 
 elif page == "About":
     st.title("\U0001F4D8 About Us")
     st.write("This lung cancer diagnostic app is developed By HasanSCULPT to assist in preliminary lung cancer risk prediction using an ensemble of Random Forest, Logistic Regression, and SVC based on patient lifestyle and symptomatic data.")
+    
 
 elif page == "Contact":
     st.title("\U0001F4E7 Contact Us")
-    st.write("Phone: +234-456-7890")
+    st.write("Phone: +234-000-0000")
     st.write("Email: support@lungdiagnosis.ai")
 
 elif page == "Terms":
