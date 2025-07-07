@@ -19,7 +19,8 @@ from sklearn.inspection import permutation_importance
 
 # Load trained ensemble model
 voting_clf = joblib.load("voting_clf.pkl")
-
+joblib.dump(voting_clf, 'voting_clf.pkl')
+scaler = joblib.load('scaler.pkl')
 # Streamlit app setup
 st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
 st.image("logo.png", width=100)
