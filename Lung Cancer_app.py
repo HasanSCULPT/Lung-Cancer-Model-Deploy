@@ -3,7 +3,10 @@
 # ├─ lung_cancer_app.py
 # ├─ lung_cancer_pipeline.pkl
 # ├─ logo.png
+# ├─ feathered_bg.png   ✅ ← background image 
+# ├─ feathered_bg.png
 # └─ requirements.txt
+
 
 # =======================================
 # File: lung_cancer_app.py
@@ -15,7 +18,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 import shap
 import streamlit as st
+import base64
+from fpdf import FPDF
 from sklearn.inspection import permutation_importance
+
+# ⬛ Feathered Background Setup
+def add_body_background(image_file):
+    with open(image_file, "rb") as img:
+        encoded = base64.b64encode(img.read()).decode()
+    page_bg_css = f"""
+    <style>
+    [data-testid="stAppViewContainer"] > .main {{
+        background-image: url("data:image/png;base64,{encoded}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+    </style>
+    """
+    st.markdown(page_bg_css, unsafe_allow_html=True)
 
 # Load trained pipeline and feature names
 pipeline = joblib.load("lung_cancer_pipeline.pkl")
@@ -23,6 +45,7 @@ feature_names = joblib.load("feature_names.pkl")
 
 # Streamlit setup
 st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
+add_body_background("feathered_bg.png")
 st.image("logo.png", width=100)
 st.title("🔬 Lung Cancer Diagnostics Centre")
 st.write("## By HasanSCULPT | DSA 2025")
@@ -67,6 +90,8 @@ if page == "Prediction":
         st.write("### Prediction Results")
         st.dataframe(df_output[["Probability", "Prediction"]])
 
+        st.download_button("📥 Download Results CSV", df_output.to_csv(index=False), "batch_predictions.csv", "text/csv")
+
         st.write("### 🔍 Prediction Probability Distribution")
         fig, ax = plt.subplots()
         ax.hist(proba, bins=10, edgecolor='k')
@@ -104,7 +129,7 @@ if page == "Prediction":
 
     # --- Individual Form ---
     st.write("---")
-    st.write("### Or Enter Individual Patient Information")
+    st.write("### Or Enter Individual medical  Patient Information below to predict whether you're likely to have Lung Cancer or not.")
 
     age = st.number_input("Age", 0, 100, 50)
     gender = st.selectbox("Gender", ["Male", "Female"])
@@ -135,9 +160,12 @@ if page == "Prediction":
 
         prob = pipeline.predict_proba(row)[0][1]
         pred = int(prob > threshold)
-        st.success(f"Predicted: {'Lung Cancer' if pred==1 else 'No Lung Cancer'} (Probability: {prob:.2f})")
 
-        # 📊 Differential bar chart
+        if pred == 1:
+            st.success(f"🛑 Predicted: LUNG CANCER (Probability: {prob:.2f})")
+        else:
+            st.success(f"✅ Predicted: NO LUNG CANCER (Probability: {prob:.2f})")
+
         st.subheader("📊 Prediction Confidence")
         fig, ax = plt.subplots()
         bars = ax.bar(["No Lung Cancer", "Lung Cancer"], [1 - prob, prob], color=["green", "red"])
@@ -149,10 +177,20 @@ if page == "Prediction":
             ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.02, f"{yval:.2f}", ha='center', va='bottom')
         st.pyplot(fig)
 
-        # 📥 Export
         if st.button("Export Result"):
             result_df = pd.DataFrame({"Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"], "Probability": [prob]})
             st.download_button("📥 Download CSV", result_df.to_csv(index=False), "prediction_result.csv", "text/csv")
+
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
+            pdf.cell(200, 10, txt="Lung Cancer Prediction Result", ln=True, align='C')
+            pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER 🛑' if pred == 1 else 'NO LUNG CANCER ✅'}", ln=True)
+            pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
+            pdf.output("prediction_result.pdf")
+
+            with open("prediction_result.pdf", "rb") as f:
+                st.download_button("📥 Download PDF", f, file_name="prediction_result.pdf")
 
 elif page == "About":
     st.title("📘 About Us")
