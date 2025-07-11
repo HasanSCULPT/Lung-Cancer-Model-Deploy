@@ -90,6 +90,14 @@ selected_lang = st.sidebar.selectbox(
     key="lang"
 )
 tr = get_translation(selected_lang) # Then, retrieve translation with
+def get_translation(language):
+    translations = {
+        "en": { ... },
+        "fr": { ... },
+        ...
+    }
+    return translations.get(language, translations["en"])
+
 
 
 # App Title and Subtitle
