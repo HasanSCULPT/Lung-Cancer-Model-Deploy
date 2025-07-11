@@ -251,7 +251,19 @@ if page == "Prediction":
         st.pyplot(fig)
 
         st.write("### 📊 Precomputed Permutation Importance")
-        importance_data = {...}  # unchanged
+        importance_data = {
+    "Feature": [
+        "SYMPTOM_SCORE", "LIFESTYLE_SCORE", "SHORTNESS OF BREATH", "SWALLOWING DIFFICULTY",
+        "ALCOHOL CONSUMING", "ANXIETY", "COUGHING", "WHEEZING", "SMOKING", "GENDER",
+        "AGE_GROUP_Senior", "AGE", "YELLOW_FINGERS", "PEER_PRESSURE", "CHEST PAIN",
+        "LIFESTYLE_RISK", "ALLERGY", "FATIGUE", "AGE_GROUP_Middle-aged", "CHRONIC DISEASE"
+    ],
+    "Importance": [
+        0.0629, 0.0371, 0.0274, 0.0258, 0.0242, 0.0242, 0.0210, 0.0194, 0.0194, 0.0113,
+        0.0097, 0.0097, 0.0081, 0.0081, 0.0048, 0.0016, 0.0, 0.0, 0.0, -2.2e-17
+    ]
+}
+
         importance_df = pd.DataFrame(importance_data).sort_values(by="Importance", ascending=True)
         fig3, ax3 = plt.subplots(figsize=(6, 6))
         ax3.barh(importance_df["Feature"], importance_df["Importance"], color='teal')
