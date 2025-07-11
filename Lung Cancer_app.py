@@ -278,7 +278,7 @@ if page == "Prediction":
         ax3.set_title("Permutation Importance (Precomputed)")
         st.pyplot(fig3)
 
-        try:
+try:
     model = pipeline.named_steps["model"]  # This is your VotingClassifier
 
     if isinstance(model, VotingClassifier):
