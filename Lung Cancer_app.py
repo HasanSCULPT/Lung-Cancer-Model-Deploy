@@ -75,8 +75,22 @@ def send_email(recipient_email, subject, body, attachment_path):
         return False
 
 # Language selector in sidebar
-selected_lang = st.sidebar.selectbox("🌍 Language", ["en", "fr", "ru", "ar", "uk"], key="lang", format_func=lambda x: get_translation(x)['language_select'])
-tr = get_translation(selected_lang)
+LANG_OPTIONS = {
+    "en": "English",
+    "fr": "Français",
+    "ru": "Русский",
+    "ar": "العربية",
+    "uk": "Українська"
+}
+
+selected_lang = st.sidebar.selectbox(
+    "🌍 Language",
+    options=list(LANG_OPTIONS.keys()),
+    format_func=lambda x: LANG_OPTIONS[x],
+    key="lang"
+)
+tr = get_translation(selected_lang) # Then, retrieve translation with
+
 
 # App Title and Subtitle
 st.image("logo.png", width=100)
