@@ -44,37 +44,36 @@ def add_body_background(image_file):
     """
     st.markdown(page_bg_css, unsafe_allow_html=True)
 
-add_body_background("feathered_bg.png")
-
 # 🌍 Language translations
-
 def get_translation(language):
-    translations = {...}  # Full dictionary remains unchanged for brevity
+    translations = {
+        "en": {
+            "title": "Lung Cancer Diagnostics Centre",
+            "subtitle": "By HasanSCULPT | DSA 2025",
+            "upload_csv": "Upload your CSV data",
+            "prediction_results": "Prediction Results",
+            "download_csv": "Download Results CSV",
+            "export": "Export Result",
+            "download_csv_single": "Download CSV",
+            "download_pdf": "Download PDF",
+            "enter_email": "Enter your email address to receive results",
+            "send_email": "Send Email",
+            "email_success": "✅ Email sent successfully!",
+            "email_fail": "❌ Failed to send email. Check configuration.",
+            "language_select": "🌍 Select Language",
+            "sidebar_title": "Navigate",
+            "individual_entry": "Or Enter Individual Patient Information",
+            "about_title": "📘 About Us",
+            "about_desc": "This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptoms and lifestyle.",
+            "contact_title": "📧 Contact Us",
+            "terms_title": "📜 Terms & Conditions",
+            "terms_text": "This tool is for educational and diagnostic support only. Not a substitute for professional medical advice."
+        },
+        # Add your other language dictionaries: fr, ru, ar, uk...
+    }
     return translations.get(language, translations["en"])
 
-# Email sender (set your SMTP credentials securely!)
-def send_email(recipient_email, subject, body, attachment_path):
-    try:
-        msg = EmailMessage()
-        msg["Subject"] = subject
-        msg["From"] = "your_email@example.com"
-        msg["To"] = recipient_email
-        msg.set_content(body)
-
-        with open(attachment_path, "rb") as f:
-            file_data = f.read()
-            file_name = f.name
-
-        msg.add_attachment(file_data, maintype="application", subtype="pdf", filename=file_name)
-
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-            smtp.login("your_email@example.com", "your_password")
-            smtp.send_message(msg)
-        return True
-    except Exception as e:
-        return False
-
-# Language selector in sidebar
+# 🌐 Language Selector Setup
 LANG_OPTIONS = {
     "en": "English",
     "fr": "Français",
@@ -84,21 +83,14 @@ LANG_OPTIONS = {
 }
 
 selected_lang = st.sidebar.selectbox(
-    "🌍 Language",
+    "🌍 Select Language",
     options=list(LANG_OPTIONS.keys()),
     format_func=lambda x: LANG_OPTIONS[x],
     key="lang"
 )
-tr = get_translation(selected_lang) # Then, retrieve translation with
-def get_translation(language):
-    translations = {
-        "en": { ... },
-        "fr": { ... },
-        ...
-    }
-    return translations.get(language, translations["en"])
 
-
+# 🌐 Retrieve selected translation
+tr = get_translation(selected_lang)
 
 # App Title and Subtitle
 st.image("logo.png", width=100)
