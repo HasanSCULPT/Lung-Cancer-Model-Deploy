@@ -26,22 +26,29 @@ from sklearn.inspection import permutation_importance
 
 # Streamlit setup first
 st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
+# Add background image
+add_background("feathered_bg.png")
 
-# ⬛ Feathered Background Setup
-def add_body_background(image_file):
-    with open(image_file, "rb") as img:
-        encoded = base64.b64encode(img.read()).decode()
-    page_bg_css = f"""
-    <style>
-    [data-testid="stAppViewContainer"] > .main {{
-        background-image: url("data:image/png;base64,{encoded}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }}
-    </style>
-    """
+
+import base64
+
+def add_background(image_path):
+    with open(image_path, "rb") as f:
+        img_data = f.read()
+        encoded = base64.b64encode(img_data).decode()
+        css = f"""
+        <style>
+        [data-testid="stAppViewContainer"] > .main {{
+            background-image: url("data:image/png;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }}
+        </style>
+        """
+        st.markdown(css, unsafe_allow_html=True)
+
     st.markdown(page_bg_css, unsafe_allow_html=True)
 
 # 🌍 Language translations
