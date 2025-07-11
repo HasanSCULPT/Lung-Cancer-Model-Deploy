@@ -45,6 +45,7 @@ def add_body_background(image_file):
     st.markdown(page_bg_css, unsafe_allow_html=True)
 
 # 🌍 Language translations
+
 def get_translation(language):
     translations = {
         "en": {
@@ -69,9 +70,97 @@ def get_translation(language):
             "terms_title": "📜 Terms & Conditions",
             "terms_text": "This tool is for educational and diagnostic support only. Not a substitute for professional medical advice."
         },
-        # Add your other language dictionaries: fr, ru, ar, uk...
+        "fr": {
+            "title": "Centre de Diagnostic du Cancer du Poumon",
+            "subtitle": "Par HasanSCULPT | DSA 2025",
+            "upload_csv": "Téléchargez votre fichier CSV",
+            "prediction_results": "Résultats de la prédiction",
+            "download_csv": "Télécharger les résultats CSV",
+            "export": "Exporter le résultat",
+            "download_csv_single": "Télécharger CSV",
+            "download_pdf": "Télécharger PDF",
+            "enter_email": "Entrez votre adresse e-mail pour recevoir les résultats",
+            "send_email": "Envoyer l'e-mail",
+            "email_success": "✅ Email envoyé avec succès !",
+            "email_fail": "❌ Échec de l'envoi de l'e-mail.",
+            "language_select": "🌍 Sélectionnez la langue",
+            "sidebar_title": "Navigation",
+            "individual_entry": "Ou entrez les informations individuelles du patient",
+            "about_title": "📘 À propos de nous",
+            "about_desc": "Cette application a été développée par HasanSCULPT pour aider à la prédiction préliminaire du risque de cancer du poumon.",
+            "contact_title": "📧 Contactez-nous",
+            "terms_title": "📜 Conditions générales",
+            "terms_text": "Cet outil est à des fins éducatives uniquement et ne remplace pas un avis médical professionnel."
+        },
+        "ru": {
+            "title": "Центр Диагностики Рака Легких",
+            "subtitle": "ХасанСКАЛЬПТ | DSA 2025",
+            "upload_csv": "Загрузите ваш CSV файл",
+            "prediction_results": "Результаты прогноза",
+            "download_csv": "Скачать CSV с результатами",
+            "export": "Экспортировать результат",
+            "download_csv_single": "Скачать CSV",
+            "download_pdf": "Скачать PDF",
+            "enter_email": "Введите ваш email для получения результата",
+            "send_email": "Отправить email",
+            "email_success": "✅ Email успешно отправлен!",
+            "email_fail": "❌ Не удалось отправить Email.",
+            "language_select": "🌍 Выберите язык",
+            "sidebar_title": "Навигация",
+            "individual_entry": "Или введите информацию о пациенте",
+            "about_title": "📘 О нас",
+            "about_desc": "Это приложение разработано HasanSCULPT для помощи в предварительном прогнозировании риска рака легких.",
+            "contact_title": "📧 Связаться с нами",
+            "terms_title": "📜 Условия использования",
+            "terms_text": "Этот инструмент предназначен только для образовательных целей и не заменяет профессиональную медицинскую консультацию."
+        },
+        "ar": {
+            "title": "مركز تشخيص سرطان الرئة",
+            "subtitle": "بواسطة حسنSculpt | DSA 2025",
+            "upload_csv": "قم بتحميل ملف CSV الخاص بك",
+            "prediction_results": "نتائج التنبؤ",
+            "download_csv": "تحميل نتائج CSV",
+            "export": "تصدير النتيجة",
+            "download_csv_single": "تحميل CSV",
+            "download_pdf": "تحميل PDF",
+            "enter_email": "أدخل بريدك الإلكتروني لتلقي النتائج",
+            "send_email": "إرسال بريد إلكتروني",
+            "email_success": "✅ تم إرسال البريد الإلكتروني بنجاح!",
+            "email_fail": "❌ فشل في إرسال البريد الإلكتروني.",
+            "language_select": "🌍 اختر اللغة",
+            "sidebar_title": "القائمة الجانبية",
+            "individual_entry": "أدخل معلومات المريض الفردية",
+            "about_title": "📘 معلومات عنا",
+            "about_desc": "تم تطوير هذا التطبيق بواسطة حسنSculpt للمساعدة في التنبؤ الأولي بمخاطر سرطان الرئة.",
+            "contact_title": "📧 تواصل معنا",
+            "terms_title": "📜 الشروط والأحكام",
+            "terms_text": "هذه الأداة لأغراض تعليمية فقط ولا تعتبر بديلاً عن الاستشارة الطبية المهنية."
+        },
+        "uk": {
+            "title": "Центр Діагностики Раку Легенів",
+            "subtitle": "ХасанСКАЛЬПТ | DSA 2025",
+            "upload_csv": "Завантажте свій CSV файл",
+            "prediction_results": "Результати прогнозу",
+            "download_csv": "Завантажити результати CSV",
+            "export": "Експортувати результат",
+            "download_csv_single": "Завантажити CSV",
+            "download_pdf": "Завантажити PDF",
+            "enter_email": "Введіть свою електронну пошту для отримання результатів",
+            "send_email": "Надіслати Email",
+            "email_success": "✅ Email успішно надіслано!",
+            "email_fail": "❌ Не вдалося надіслати Email.",
+            "language_select": "🌍 Виберіть мову",
+            "sidebar_title": "Навігація",
+            "individual_entry": "Або введіть інформацію про пацієнта",
+            "about_title": "📘 Про нас",
+            "about_desc": "Цей додаток розроблений HasanSCULPT для допомоги у попередньому прогнозуванні ризику раку легенів.",
+            "contact_title": "📧 Зв'язатися з нами",
+            "terms_title": "📜 Умови використання",
+            "terms_text": "Цей інструмент призначено лише для освітніх цілей і не замінює професійну медичну консультацію."
+        }
     }
     return translations.get(language, translations["en"])
+
 
 # 🌐 Language Selector Setup
 LANG_OPTIONS = {
