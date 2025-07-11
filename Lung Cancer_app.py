@@ -271,12 +271,38 @@ if page == "Prediction":
         ax3.set_title("Permutation Importance (Precomputed)")
         st.pyplot(fig3)
 
-        st.write("### 🧠 SHAP Explanation (Random Forest)")
-        rf_model = pipeline.named_steps["model"].estimators[0]
-        explainer = shap.TreeExplainer(rf_model)
+        try:
+    model = pipeline.named_steps["model"]  # This is your VotingClassifier
+
+    if isinstance(model, VotingClassifier):
+        # Attempt to use RandomForest or fallback to LogisticRegression
+        base_models = dict(model.named_estimators_)
+
+        if "rf" in base_models:
+            base_model = base_models["rf"]
+            explainer = shap.TreeExplainer(base_model)
+            shap_values = explainer.shap_values(df_input)
+        elif "lr" in base_models:
+            base_model = base_models["lr"]
+            explainer = shap.LinearExplainer(base_model, df_input)
+            shap_values = explainer.shap_values(df_input)
+        else:
+            raise ValueError("No SHAP-compatible estimator found in VotingClassifier.")
+
+    elif hasattr(model, "estimators_"):  # e.g., RandomForest directly
+        explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(df_input)
-        st.set_option('deprecation.showPyplotGlobalUse', False)
-        shap.summary_plot(shap_values[1], df_input, plot_type="bar")
+
+    else:
+        raise ValueError("Unsupported model for SHAP explanation.")
+
+    st.write("### 🧠 SHAP Explanation")
+    shap.summary_plot(shap_values[1], df_input, plot_type="bar")  # For classification
+    st.pyplot()
+
+except Exception as e:
+    st.warning(f"⚠️ SHAP explanation could not be generated.\n\nError: {e}")
+
         st.pyplot()
     else:
         st.info("⬅️ Upload a CSV file to start prediction")
