@@ -285,16 +285,16 @@ try:
         # Attempt to use RandomForest or fallback to LogisticRegression
         base_models = dict(model.named_estimators_)
 
-        if "rf" in base_models:
-            base_model = base_models["rf"]
-            explainer = shap.TreeExplainer(base_model)
-            shap_values = explainer.shap_values(df_input)
-        elif "lr" in base_models:
-            base_model = base_models["lr"]
-            explainer = shap.LinearExplainer(base_model, df_input)
-            shap_values = explainer.shap_values(df_input)
-        else:
-            raise ValueError("No SHAP-compatible estimator found in VotingClassifier.")
+    if "rf" in base_models:
+        base_model = base_models["rf"]
+        explainer = shap.TreeExplainer(base_model)
+        shap_values = explainer.shap_values(df_input)
+    elif "lr" in base_models:
+        base_model = base_models["lr"]
+        explainer = shap.LinearExplainer(base_model, df_input)
+        shap_values = explainer.shap_values(df_input)
+    else:
+        raise ValueError("No SHAP-compatible estimator found in VotingClassifier.")
 
     elif hasattr(model, "estimators_"):  # e.g., RandomForest directly
         explainer = shap.TreeExplainer(model)
