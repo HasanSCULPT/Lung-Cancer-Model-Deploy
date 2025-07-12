@@ -35,20 +35,21 @@ def add_background(image_path):
     with open(image_path, "rb") as f:
         img_data = f.read()
         encoded = base64.b64encode(img_data).decode()
-        css = f"""
-        <style>
-        [data-testid="stAppViewContainer"] > .main {{
-            background-image: url("data:image/png;base64,{encoded}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }}
-        </style>
-        """
-        st.markdown(css, unsafe_allow_html=True)
 
-    st.markdown(page_bg_css, unsafe_allow_html=True)
+    css = f"""
+    <style>
+    [data-testid="stAppViewContainer"] > .main {{
+        background-image: url("data:image/png;base64,{encoded}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
+
+   
 
 # 🌍 Language translations
 
