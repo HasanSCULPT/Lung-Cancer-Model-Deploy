@@ -335,14 +335,6 @@ if page == "Prediction":
 if st.button(tr['export'], key="exp_btn"):
     result_df = pd.DataFrame({"Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"], "Probability": [prob]})
     
-    st.download_button(
-        label="📥 " + tr['download_csv_single'],
-        data=result_df.to_csv(index=False),
-        file_name="prediction_result.csv",
-        mime="text/csv",
-        key="csv_download"
-    )
-
     with open("prediction_result.pdf", "rb") as f:
         st.download_button(
             label="📥 " + tr['download_pdf'],
@@ -351,6 +343,14 @@ if st.button(tr['export'], key="exp_btn"):
             mime="application/pdf",
             key="pdf_download"
         )
+    st.download_button(
+        label="📥 " + tr['download_csv_single'],
+        data=result_df.to_csv(index=False),
+        file_name="prediction_result.csv",
+        mime="text/csv",
+        key="csv_download"
+    )
+    
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
