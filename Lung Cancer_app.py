@@ -281,36 +281,24 @@ if page == "Prediction":
 try:
     model = pipeline.named_steps["model"]  # This is your VotingClassifier
 
-    if isinstance(model, VotingClassifier):
-        # Attempt to use RandomForest or fallback to LogisticRegression
-        base_models = dict(model.named_estimators_)
+    # Try SHAP on VotingClassifier directly (likely to fail)
+    explainer = shap.TreeExplainer(model)
+    shap_values = explainer.shap_values(df_input)
 
-    if "rf" in base_models:
-        base_model = base_models["rf"]
-        explainer = shap.TreeExplainer(base_model)
-        shap_values = explainer.shap_values(df_input)
-    elif "lr" in base_models:
-        base_model = base_models["lr"]
-        explainer = shap.LinearExplainer(base_model, df_input)
-        shap_values = explainer.shap_values(df_input)
-    else:
-        raise ValueError("No SHAP-compatible estimator found in VotingClassifier.")
+except shap.utils._exceptions.InvalidModelError:
+    # Fallback to a base estimator (e.g., first RandomForest inside VotingClassifier)
+    st.warning("⚠️ SHAP does not support VotingClassifier directly. Falling back to base estimator.")
 
-    elif hasattr(model, "estimators_"):  # e.g., RandomForest directly
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(df_input)
+    base_model = model.estimators_[0][1]  # Pick first model (e.g., ('rf', RandomForestClassifier))
+    explainer = shap.TreeExplainer(base_model)
+    shap_values = explainer.shap_values(df_input)
 
-    else:
-        raise ValueError("Unsupported model for SHAP explanation.")
+# Plot SHAP summary
+st.set_option('deprecation.showPyplotGlobalUse', False)
+st.write("### 🧠 SHAP Explanation")
+shap.summary_plot(shap_values[1], df_input, plot_type="bar")
+st.pyplot()
 
-    st.write("### 🧠 SHAP Explanation")
-    shap.summary_plot(shap_values[1], df_input, plot_type="bar")  # For classification
-    st.pyplot()
-
-except Exception as e:
-    st.warning(f"⚠️ SHAP explanation could not be generated.\n\nError: {e}")
-
-        st.pyplot()
     else:
         st.info("⬅️ Upload a CSV file to start prediction")
 
