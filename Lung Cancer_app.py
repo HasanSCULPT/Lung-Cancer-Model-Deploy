@@ -29,25 +29,30 @@ st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
 add_body_background("feathered_bg.png")
 
 
+
 import base64
 
-def add_background(image_path):
-    with open(image_path, "rb") as f:
-        img_data = f.read()
-        encoded = base64.b64encode(img_data).decode()
+# Optional cache to speed up repeated loads
+@st.cache_data  # Use @st.cache if on older Streamlit
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
 
-    css = f"""
+def set_png_as_page_bg(png_file):
+    bin_str = get_base64_of_bin_file(png_file)
+    page_bg_img = f'''
     <style>
     [data-testid="stAppViewContainer"] > .main {{
-        background-image: url("data:image/png;base64,{encoded}");
+        background-image: url("data:image/png;base64,{bin_str}");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         background-attachment: fixed;
     }}
     </style>
-    """
-    st.markdown(css, unsafe_allow_html=True)
+    '''
+    st.markdown(page_bg_img, unsafe_allow_html=True)
 
    
 
