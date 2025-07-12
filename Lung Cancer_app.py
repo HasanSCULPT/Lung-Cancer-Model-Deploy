@@ -332,16 +332,36 @@ if page == "Prediction":
         st.pyplot(fig)
 
         if st.button(tr['export'], key="exp_btn"):
-            result_df = pd.DataFrame({"Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"], "Probability": [prob]})
-            st.download_button("📥 " + tr['download_csv_single'], result_df.to_csv(index=False), "prediction_result.csv", "text/csv")
+    # Create the result DataFrame
+    result_df = pd.DataFrame({
+        "Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"],
+        "Probability": [prob]
+    })
 
-            pdf = FPDF()
-            pdf.add_page()
-            pdf.set_font("Arial", size=12)
-            pdf.cell(200, 10, txt="Lung Cancer Prediction Result", ln=True, align='C')
-            pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER 🛑' if pred == 1 else 'NO LUNG CANCER ✅'}", ln=True)
-            pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
-            pdf.output("prediction_result.pdf")
+    # Show download button for CSV
+    st.download_button(
+        label="📥 " + tr['download_csv_single'],
+        data=result_df.to_csv(index=False),
+        file_name="prediction_result.csv",
+        mime="text/csv",
+        key="csv_download"
+    )
 
-            with open("prediction_result.pdf", "rb") as f:
-                st.download_button("📥 " + tr['download_pdf'], f, file_name="prediction_result.pdf")
+    # Create PDF
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt="Lung Cancer Prediction Result", ln=True, align='C')
+    pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER 🛑' if pred == 1 else 'NO LUNG CANCER ✅'}", ln=True)
+    pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
+    pdf.output("prediction_result.pdf")
+
+    # Show download button for PDF
+    with open("prediction_result.pdf", "rb") as f:
+        st.download_button(
+            label="📥 " + tr['download_pdf'],
+            data=f,
+            file_name="prediction_result.pdf",
+            mime="application/pdf",
+            key="pdf_download"
+        )
