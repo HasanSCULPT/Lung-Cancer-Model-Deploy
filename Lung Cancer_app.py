@@ -277,7 +277,6 @@ if page == "Prediction":
         ax3.set_xlabel("Mean Importance Score")
         ax3.set_title("Permutation Importance (Precomputed)")
         st.pyplot(fig3)
-
 try:
     model = pipeline.named_steps["model"]  # This is your VotingClassifier
 
@@ -298,6 +297,7 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 st.write("### 🧠 SHAP Explanation")
 shap.summary_plot(shap_values[1], df_input, plot_type="bar")
 st.pyplot()
+        
 
     else:
         st.info("⬅️ Upload a CSV file to start prediction")
