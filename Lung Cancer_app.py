@@ -26,10 +26,6 @@ from sklearn.inspection import permutation_importance
 
 # Streamlit setup first
 st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
-add_body_background("feathered_bg.png")
-
-
-
 import base64
 
 # Optional cache to speed up repeated loads
@@ -53,8 +49,8 @@ def set_png_as_page_bg(png_file):
     </style>
     '''
     st.markdown(page_bg_img, unsafe_allow_html=True)
+add_body_background("feathered_bg.png")
 
-   
 
 # 🌍 Language translations
 
