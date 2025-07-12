@@ -331,14 +331,10 @@ if page == "Prediction":
             ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.02, f"{yval:.2f}", ha='center', va='bottom')
         st.pyplot(fig)
 
-        if st.button(tr['export'], key="exp_btn"):
-    # Create the result DataFrame
-    result_df = pd.DataFrame({
-        "Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"],
-        "Probability": [prob]
-    })
 
-    # Show download button for CSV
+if st.button(tr['export'], key="exp_btn"):
+    result_df = pd.DataFrame({"Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"], "Probability": [prob]})
+    
     st.download_button(
         label="📥 " + tr['download_csv_single'],
         data=result_df.to_csv(index=False),
@@ -347,7 +343,6 @@ if page == "Prediction":
         key="csv_download"
     )
 
-    # Create PDF
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
@@ -356,7 +351,6 @@ if page == "Prediction":
     pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
     pdf.output("prediction_result.pdf")
 
-    # Show download button for PDF
     with open("prediction_result.pdf", "rb") as f:
         st.download_button(
             label="📥 " + tr['download_pdf'],
@@ -365,3 +359,4 @@ if page == "Prediction":
             mime="application/pdf",
             key="pdf_download"
         )
+
