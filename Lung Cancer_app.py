@@ -277,26 +277,7 @@ if page == "Prediction":
         ax3.set_xlabel("Mean Importance Score")
         ax3.set_title("Permutation Importance (Precomputed)")
         st.pyplot(fig3)
-    try:
-        model = pipeline.named_steps["model"]  # This is your VotingClassifier
-
-    # Try SHAP on VotingClassifier directly (likely to fail)
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(df_input)
-
- except shap.utils._exceptions.InvalidModelError:
-    # Fallback to a base estimator (e.g., first RandomForest inside VotingClassifier)
-        st.warning("⚠️ SHAP does not support VotingClassifier directly. Falling back to base estimator.")
-
-        base_model = model.estimators_[0][1]  # Pick first model (e.g., ('rf', RandomForestClassifier))
-        explainer = shap.TreeExplainer(base_model)
-        shap_values = explainer.shap_values(df_input)
-
-# Plot SHAP summary
-        st.set_option('deprecation.showPyplotGlobalUse', False)
-        st.write("### 🧠 SHAP Explanation")
-        shap.summary_plot(shap_values[1], df_input, plot_type="bar")
-        st.pyplot()
+    
         
 
     else:
