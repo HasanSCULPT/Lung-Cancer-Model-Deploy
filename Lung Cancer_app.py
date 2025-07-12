@@ -343,14 +343,6 @@ if st.button(tr['export'], key="exp_btn"):
         key="csv_download"
     )
 
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt="Lung Cancer Prediction Result", ln=True, align='C')
-    pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER 🛑' if pred == 1 else 'NO LUNG CANCER ✅'}", ln=True)
-    pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
-    pdf.output("prediction_result.pdf")
-
     with open("prediction_result.pdf", "rb") as f:
         st.download_button(
             label="📥 " + tr['download_pdf'],
@@ -359,4 +351,13 @@ if st.button(tr['export'], key="exp_btn"):
             mime="application/pdf",
             key="pdf_download"
         )
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt="Lung Cancer Prediction Result", ln=True, align='C')
+    pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER 🛑' if pred == 1 else 'NO LUNG CANCER ✅'}", ln=True)
+    pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
+    pdf.output("prediction_result.pdf")
+
+    
 
