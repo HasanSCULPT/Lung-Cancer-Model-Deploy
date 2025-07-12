@@ -331,7 +331,6 @@ if page == "Prediction":
             ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.02, f"{yval:.2f}", ha='center', va='bottom')
         st.pyplot(fig)
 
-
 if st.button(tr['export'], key="exp_btn"):
     result_df = pd.DataFrame({"Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"], "Probability": [prob]})
     
@@ -343,13 +342,6 @@ if st.button(tr['export'], key="exp_btn"):
             mime="application/pdf",
             key="pdf_download"
         )
-    st.download_button(
-        label="📥 " + tr['download_csv_single'],
-        data=result_df.to_csv(index=False),
-        file_name="prediction_result.csv",
-        mime="text/csv",
-        key="csv_download"
-    )
     
     pdf = FPDF()
     pdf.add_page()
