@@ -26,7 +26,6 @@ from sklearn.inspection import permutation_importance
 
 # Streamlit setup first
 st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
-# Add background image
 add_body_background("feathered_bg.png")
 
 
