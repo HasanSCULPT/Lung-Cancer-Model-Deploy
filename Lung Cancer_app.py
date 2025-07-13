@@ -368,6 +368,11 @@ if st.button("Predict Individual"):
         pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER 🛑' if pred == 1 else 'NO LUNG CANCER ✅'}", ln=True)
         pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
         pdf.output("prediction_result.pdf")
+        
+        pdf_buffer = io.BytesIO()
+        pdf.output(pdf_buffer)
+        pdf_buffer.seek(0)
+
 
         # PDF Download
         with open("prediction_result.pdf", "rb") as f:
