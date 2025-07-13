@@ -331,24 +331,82 @@ if page == "Prediction":
             ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.02, f"{yval:.2f}", ha='center', va='bottom')
         st.pyplot(fig)
 
-if st.button(tr['export'], key="exp_btn"):
-    result_df = pd.DataFrame({"Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"], "Probability": [prob]})
-    with open("prediction_result.pdf", "rb") as f:
-        st.download_button(
-            label="📥 " + tr['download_pdf'],
-            data=f,
-            file_name="prediction_result.pdf",
-            mime="application/pdf",
-            key="pdf_download"
-        )
-    st.download_button("📥 " + tr['download_pdf'], df_output.to_pdf(index=False), "predict_individual.pdf", "text/pdf")
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt="Lung Cancer Prediction Result", ln=True, align='C')
-    pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER 🛑' if pred == 1 else 'NO LUNG CANCER ✅'}", ln=True)
-    pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
-    pdf.output("prediction_result.pdf")
+if st.button("Predict Individual"):
+    row = pd.DataFrame({
+        'AGE': [age],
+        'GENDER': [1 if gender == "Male" else 0],
+        'SMOKING': [smoking],
+        'ANXIETY': [anxiety],
+        'ALCOHOL CONSUMING': [alcohol],
+        'PEER_PRESSURE': [peer_pressure],
+        'COUGHING': [cough],
+        'SHORTNESS OF BREATH': [short_breath],
+        'SYMPTOM_SCORE': [symptom_score],
+        'LIFESTYLE_SCORE': [lifestyle_score],
+        'AGE_GROUP_Senior': [1 if age > 60 else 0]
+    })
 
-    
+    # Ensure all required features are present
+    for col in feature_names:
+        if col not in row:
+            row[col] = 0
+    row = row[feature_names]
+
+    # Predict
+    prob = pipeline.predict_proba(row)[0][1]
+    pred = int(prob > threshold)
+
+    # Display result
+    if pred == 1:
+        st.success(f"🛑 Predicted: LUNG CANCER (Probability: {prob:.2f})")
+    else:
+        st.success(f"✅ Predicted: NO LUNG CANCER (Probability: {prob:.2f})")
+
+    # Confidence bar chart
+    st.subheader("📊 Prediction Confidence")
+    fig, ax = plt.subplots()
+    bars = ax.bar(["No Lung Cancer", "Lung Cancer"], [1 - prob, prob], color=["green", "red"])
+    ax.set_ylim(0, 1)
+    ax.set_ylabel("Probability")
+    ax.set_title("Prediction Confidence")
+    for bar in bars:
+        yval = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.02, f"{yval:.2f}", ha='center', va='bottom')
+    st.pyplot(fig)
+
+    # Export section (CSV and PDF)
+    if st.button(tr['export'], key="exp_btn"):
+        # Result as DataFrame
+        result_df = pd.DataFrame({
+            "Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"],
+            "Probability": [prob]
+        })
+
+        # CSV Download
+        st.download_button(
+            label="📥 " + tr['download_csv_single'],
+            data=result_df.to_csv(index=False),
+            file_name="prediction_result.csv",
+            mime="text/csv",
+            key="csv_download"
+        )
+
+        # Generate PDF
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+        pdf.cell(200, 10, txt="Lung Cancer Prediction Result", ln=True, align='C')
+        pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER 🛑' if pred == 1 else 'NO LUNG CANCER ✅'}", ln=True)
+        pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
+        pdf.output("prediction_result.pdf")
+
+        # PDF Download
+        with open("prediction_result.pdf", "rb") as f:
+            st.download_button(
+                label="📥 " + tr['download_pdf'],
+                data=f.read(),
+                file_name="prediction_result.pdf",
+                mime="application/pdf",
+                key="pdf_download"
+            )
 
