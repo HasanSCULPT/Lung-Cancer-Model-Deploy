@@ -78,6 +78,16 @@ with st.container():
         hover_data=["GENDER", "AGE", "COUGHING", "WHEEZING"]
     )
     st.plotly_chart(fig1)
+    df = pd.read_csv(uploaded_file)  # or your actual loading line
+
+# Robust mapping
+diagnosis_col = [col for col in df.columns if "diagnosis" in col.lower()]
+if diagnosis_col:
+    df["DIAGNOSIS"] = df[diagnosis_col[0]].map({0: "No Lung Cancer", 1: "Lung Cancer"})
+else:
+    st.error("⚠️ Diagnosis column not found in the uploaded dataset.")
+    st.stop()
+
 
 # Container 2: LIFESTYLE SCORE vs DIAGNOSIS
 with st.container():
