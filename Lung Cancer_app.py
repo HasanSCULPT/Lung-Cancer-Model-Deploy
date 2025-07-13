@@ -61,42 +61,96 @@ page_bg_img = f"""
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
 df = px.data.iris()
-# Ensure 'DIAGNOSIS' is clean and readable
+# Ensure consistent labels
 df["DIAGNOSIS"] = df["DIAGNOSIS"].map({0: "No Lung Cancer", 1: "Lung Cancer"})
 
-# CONTAINER 1: SYMPTOM_SCORE Distribution by Diagnosis
+# Container 1: SYMPTOM SCORE vs DIAGNOSIS
 with st.container():
     st.header("SYMPTOM SCORE vs Diagnosis")
-    st.markdown("Visual comparison of total symptom burden between diagnosed and non-diagnosed groups.")
-    df1 = df.dropna(subset=["DIAGNOSIS", "SYMPTOM_SCORE"])
-    fig1 = px.box(df1, x="DIAGNOSIS", y="SYMPTOM_SCORE", color="DIAGNOSIS", points="all")
+    st.markdown("Compare total symptom burden by diagnosis outcome.")
+    df1 = df.dropna(subset=["DIAGNOSIS", "SYMPTOM_SCORE", "GENDER"])
+    fig1 = px.box(
+        df1,
+        x="DIAGNOSIS",
+        y="SYMPTOM_SCORE",
+        color="DIAGNOSIS",
+        points="all",
+        hover_data=["GENDER", "AGE", "COUGHING", "WHEEZING"]
+    )
     st.plotly_chart(fig1)
 
-# CONTAINER 2: LIFESTYLE_SCORE Distribution by Diagnosis
+# Container 2: LIFESTYLE SCORE vs DIAGNOSIS
 with st.container():
     st.header("LIFESTYLE SCORE vs Diagnosis")
-    st.markdown("Shows correlation between lifestyle risk scores and lung cancer diagnosis.")
-    df2 = df.dropna(subset=["DIAGNOSIS", "LIFESTYLE_SCORE"])
-    fig2 = px.box(df2, x="DIAGNOSIS", y="LIFESTYLE_SCORE", color="DIAGNOSIS", points="all")
+    st.markdown("Shows correlation between lifestyle habits and lung cancer outcomes.")
+    df2 = df.dropna(subset=["DIAGNOSIS", "LIFESTYLE_SCORE", "SMOKING"])
+    fig2 = px.box(
+        df2,
+        x="DIAGNOSIS",
+        y="LIFESTYLE_SCORE",
+        color="DIAGNOSIS",
+        points="all",
+        hover_data=["SMOKING", "ALCOHOL CONSUMING", "PEER_PRESSURE"]
+    )
     st.plotly_chart(fig2)
 
-# CONTAINER 3: AGE vs SYMPTOM_SCORE Scatter by Diagnosis
+# Container 3: AGE vs SYMPTOM SCORE with trendline
 with st.container():
     st.header("Age vs Symptom Score")
-    st.markdown("Age relationship with accumulated symptoms.")
+    st.markdown("Relationship between age and symptom accumulation.")
     df3 = df.dropna(subset=["AGE", "SYMPTOM_SCORE", "DIAGNOSIS"])
-    fig3 = px.scatter(df3, x="AGE", y="SYMPTOM_SCORE", color="DIAGNOSIS", trendline="ols")
+    fig3 = px.scatter(
+        df3,
+        x="AGE",
+        y="SYMPTOM_SCORE",
+        color="DIAGNOSIS",
+        trendline="ols",
+        hover_data=["GENDER", "FATIGUE", "CHEST PAIN"]
+    )
     st.plotly_chart(fig3)
 
-# CONTAINER 4: WHEEZING vs AGE by Diagnosis
+# Container 4: WHEEZING Frequency by Diagnosis
 with st.container():
-    st.header("Wheezing and Age Correlation")
-    st.markdown("How wheezing frequency varies by age and diagnosis.")
-    df4 = df.dropna(subset=["AGE", "WHEEZING", "DIAGNOSIS"])
-    fig4 = px.box(df4, x="DIAGNOSIS", y="WHEEZING", color="DIAGNOSIS", points="all")
+    st.header("Wheezing Frequency by Diagnosis")
+    st.markdown("Wheezing levels across diagnostic groups.")
+    df4 = df.dropna(subset=["WHEEZING", "DIAGNOSIS"])
+    fig4 = px.violin(
+        df4,
+        x="DIAGNOSIS",
+        y="WHEEZING",
+        color="DIAGNOSIS",
+        box=True,
+        points="all",
+        hover_data=["AGE", "COUGHING", "SHORTNESS OF BREATH"]
+    )
     st.plotly_chart(fig4)
 
+# Container 5: Feature Importance Bar Chart
+with st.container():
+    st.header("Top Feature Importances")
+    st.markdown("Visual ranking of features by model importance.")
 
+    importance_data = {
+        "Feature": ["SYMPTOM_SCORE", "LIFESTYLE_SCORE", "SHORTNESS OF BREATH", "SWALLOWING DIFFICULTY",
+                    "ALCOHOL CONSUMING", "ANXIETY", "COUGHING", "WHEEZING", "SMOKING", "GENDER",
+                    "AGE_GROUP_Senior", "AGE", "YELLOW_FINGERS", "PEER_PRESSURE", "CHEST PAIN",
+                    "LIFESTYLE_RISK", "ALLERGY", "FATIGUE", "AGE_GROUP_Middle-aged", "CHRONIC DISEASE"],
+        "Importance": [0.0629, 0.0371, 0.0274, 0.0258, 0.0242, 0.0242, 0.0210, 0.0194, 0.0194, 0.0113,
+                       0.0097, 0.0097, 0.0081, 0.0081, 0.0048, 0.0016, 0.0, 0.0, 0.0, -2.2e-17]
+    }
+
+    imp_df = pd.DataFrame(importance_data).sort_values(by="Importance", ascending=True)
+    fig5 = px.bar(
+        imp_df,
+        x="Importance",
+        y="Feature",
+        orientation="h",
+        color="Importance",
+        color_continuous_scale="Bluered",
+        labels={"Importance": "Feature Importance"},
+        height=600
+    )
+    st.plotly_chart(fig5)
 # 🌍 Language translations
 
 def get_translation(language):
