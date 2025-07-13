@@ -333,7 +333,6 @@ if page == "Prediction":
 
 if st.button(tr['export'], key="exp_btn"):
     result_df = pd.DataFrame({"Prediction": ["Lung Cancer" if pred == 1 else "No Lung Cancer"], "Probability": [prob]})
-    
     with open("prediction_result.pdf", "rb") as f:
         st.download_button(
             label="📥 " + tr['download_pdf'],
@@ -342,7 +341,7 @@ if st.button(tr['export'], key="exp_btn"):
             mime="application/pdf",
             key="pdf_download"
         )
-    
+    st.download_button("📥 " + tr['download_pdf'], df_output.to_pdf(index=False), "predict_individual.pdf", "text/pdf")
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
