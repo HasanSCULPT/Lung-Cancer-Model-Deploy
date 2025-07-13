@@ -20,6 +20,7 @@ import shap
 import streamlit as st
 import base64
 import smtplib
+import io
 from email.message import EmailMessage
 from fpdf import FPDF
 from sklearn.inspection import permutation_importance
@@ -68,7 +69,7 @@ def get_translation(language):
             "email_fail": "❌ Failed to send email. Check configuration.",
             "language_select": "🌍 Select Language",
             "sidebar_title": "Navigate",
-            "individual_entry": "Or Enter Individual Patient Information",
+            "individual_entry": "Welcome To the Diagnostics Centre please  enter your medical/patient information below to predict whether you're likely to have Lung Cancer",
             "about_title": "📘 About Us",
             "about_desc": "This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptoms and lifestyle.",
             "contact_title": "📧 Contact Us",
@@ -195,13 +196,28 @@ st.write(f"## {tr['subtitle']}")
 page = st.sidebar.selectbox(tr['sidebar_title'], ["Prediction", "About", "Contact", "Terms"], key="page")
 
 # Email input
-email = st.text_input(tr['enter_email'], key="email")
-if email and st.button(tr['send_email'], key="email_btn"):
-    success = send_email(email, tr['title'], "See attached result.", "prediction_result.pdf")
-    if success:
-        st.success(tr['email_success'])
-    else:
-        st.error(tr['email_fail'])
+# Email sender (placeholder)
+def send_email(recipient_email, subject, body, attachment_path):
+    try:
+        msg = EmailMessage()
+        msg["Subject"] = subject
+        msg["From"] = "your_email@example.com"
+        msg["To"] = recipient_email
+        msg.set_content(body)
+
+        with open(attachment_path, "rb") as f:
+            file_data = f.read()
+            file_name = f.name
+
+        msg.add_attachment(file_data, maintype="application", subtype="pdf", filename=file_name)
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+            smtp.login("your_email@example.com", "your_password")
+            smtp.send_message(msg)
+        return True
+    except Exception:
+        return False
+
 
 # Page Routing
 if page == "About":
@@ -367,7 +383,7 @@ if st.button("Predict Individual"):
         pdf.cell(200, 10, txt="Lung Cancer Prediction Result", ln=True, align='C')
         pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER 🛑' if pred == 1 else 'NO LUNG CANCER ✅'}", ln=True)
         pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
-        pdf.output("prediction_result.pdf")
+       
         
         pdf_buffer = io.BytesIO()
         pdf.output(pdf_buffer)
