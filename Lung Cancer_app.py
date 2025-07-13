@@ -61,33 +61,41 @@ page_bg_img = f"""
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
 df = px.data.iris()
-# 🔬 Symptom Score Distribution by Diagnosis
+# Ensure 'DIAGNOSIS' is clean and readable
+df["DIAGNOSIS"] = df["DIAGNOSIS"].map({0: "No Lung Cancer", 1: "Lung Cancer"})
+
+# CONTAINER 1: SYMPTOM_SCORE Distribution by Diagnosis
 with st.container():
-    st.header("🔬 Symptom Score vs Diagnosis")
-    st.markdown("Visualizing the distribution of the overall symptom score across diagnostic outcomes.")
-    fig1 = px.box(df, x="DIAGNOSIS", y="SYMPTOM_SCORE", color="DIAGNOSIS", points="all")
+    st.header("SYMPTOM SCORE vs Diagnosis")
+    st.markdown("Visual comparison of total symptom burden between diagnosed and non-diagnosed groups.")
+    df1 = df.dropna(subset=["DIAGNOSIS", "SYMPTOM_SCORE"])
+    fig1 = px.box(df1, x="DIAGNOSIS", y="SYMPTOM_SCORE", color="DIAGNOSIS", points="all")
     st.plotly_chart(fig1)
 
-# 🍷 Lifestyle Risk Score
+# CONTAINER 2: LIFESTYLE_SCORE Distribution by Diagnosis
 with st.container():
-    st.header("🍷 Lifestyle Score by Diagnosis")
-    st.markdown("Lifestyle factors compared across patients with and without lung cancer.")
-    fig2 = px.violin(df, x="DIAGNOSIS", y="LIFESTYLE_SCORE", box=True, points="all", color="DIAGNOSIS")
+    st.header("LIFESTYLE SCORE vs Diagnosis")
+    st.markdown("Shows correlation between lifestyle risk scores and lung cancer diagnosis.")
+    df2 = df.dropna(subset=["DIAGNOSIS", "LIFESTYLE_SCORE"])
+    fig2 = px.box(df2, x="DIAGNOSIS", y="LIFESTYLE_SCORE", color="DIAGNOSIS", points="all")
     st.plotly_chart(fig2)
 
-# 👤 Age Group Breakdown
+# CONTAINER 3: AGE vs SYMPTOM_SCORE Scatter by Diagnosis
 with st.container():
-    st.header("👤 Age Group Distribution")
-    st.markdown("Distribution of patients by age group and diagnosis.")
-    fig3 = px.histogram(df, x="AGE", color="DIAGNOSIS", nbins=30, marginal="rug")
+    st.header("Age vs Symptom Score")
+    st.markdown("Age relationship with accumulated symptoms.")
+    df3 = df.dropna(subset=["AGE", "SYMPTOM_SCORE", "DIAGNOSIS"])
+    fig3 = px.scatter(df3, x="AGE", y="SYMPTOM_SCORE", color="DIAGNOSIS", trendline="ols")
     st.plotly_chart(fig3)
 
-# ⚕️ Symptom Prevalence: Shortness of Breath
+# CONTAINER 4: WHEEZING vs AGE by Diagnosis
 with st.container():
-    st.header("⚕️ Shortness of Breath by Diagnosis")
-    st.markdown("How often shortness of breath is reported across diagnostic outcomes.")
-    fig4 = px.histogram(df, x="SHORTNESS OF BREATH", color="DIAGNOSIS", barmode="group")
+    st.header("Wheezing and Age Correlation")
+    st.markdown("How wheezing frequency varies by age and diagnosis.")
+    df4 = df.dropna(subset=["AGE", "WHEEZING", "DIAGNOSIS"])
+    fig4 = px.box(df4, x="DIAGNOSIS", y="WHEEZING", color="DIAGNOSIS", points="all")
     st.plotly_chart(fig4)
+
 
 # 🌍 Language translations
 
