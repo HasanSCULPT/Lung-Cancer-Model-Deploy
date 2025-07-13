@@ -297,16 +297,7 @@ if page == "Prediction":
     lifestyle_score = st.slider("LIFESTYLE SCORE", 0, 5, 2)
     age_group_senior = 1 if age > 60 else 0
 
-    if st.button("Predict Individual", key="ind_pred"):
-        row = pd.DataFrame({
-            'AGE': [age], 'GENDER': [1 if gender == "Male" else 0],
-            'SMOKING': [smoking], 'ANXIETY': [anxiety], 'ALCOHOL CONSUMING': [alcohol],
-            'PEER_PRESSURE': [peer_pressure], 'COUGHING': [cough],
-            'SHORTNESS OF BREATH': [short_breath],
-            'SYMPTOM_SCORE': [symptom_score], 'LIFESTYLE_SCORE': [lifestyle_score],
-            'AGE_GROUP_Senior': [age_group_senior]
-        })
-
+    
      
 
 if st.button("Predict Individual"):
