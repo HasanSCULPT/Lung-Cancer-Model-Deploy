@@ -57,7 +57,8 @@ page_bg_img = f"""
 }}
 </style>
 """
-st.markdown(page_bg_css, unsafe_allow_html=True)
+st.markdown(page_bg_img, unsafe_allow_html=True)
+
     #Call background function
 add_body_background("feathered_bg.png")
 
