@@ -30,21 +30,34 @@ st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
 #import base64
 #import streamlit as st
 #Define background function
-def add_body_background(image_file):
-    with open(image_file, "rb") as img:
-        encoded = base64.b64encode(img.read()).decode()
-    page_bg_css = f"""
-    <style>
-    [data-testid="stAppViewContainer"] > .main {{
-        background-image: url("data:image/png;base64,{encoded}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }}
-    </style>
-    """
-    st.markdown(page_bg_css, unsafe_allow_html=True)
+def get_img_as_base64(file):
+    with open(file, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+# Set main background from local PNG
+main_bg = get_img_as_base64("feathered_bg.png")
+# Inject CSS for main background only
+page_bg_img = f"""
+<style>
+[data-testid="stAppViewContainer"] > .main {{
+    background-image: url("data:image/png;base64,{main_bg}");    
+        
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}}    
+
+[data-testid="stHeader"] {{
+    background: rgba(0,0,0,0);
+}}
+
+[data-testid="stToolbar"] {{
+    right: 2rem;    
+}}
+</style>
+"""
+st.markdown(page_bg_css, unsafe_allow_html=True)
     #Call background function
 add_body_background("feathered_bg.png")
 
@@ -69,7 +82,7 @@ def get_translation(language):
             "email_fail": "❌ Failed to send email. Check configuration.",
             "language_select": "🌍 Select Language",
             "sidebar_title": "Navigate",
-            "individual_entry": "Welcome To the Diagnostics Centre please  enter your medical/patient information below to predict whether you're likely to have Lung Cancer",
+            "individual_entry": "Welcome To the Diagnostics Centre, please  enter your medical/patient information below to predict whether you're likely to have Lung Cancer",
             "about_title": "📘 About Us",
             "about_desc": "This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptoms and lifestyle.",
             "contact_title": "📧 Contact Us",
@@ -197,6 +210,14 @@ page = st.sidebar.selectbox(tr['sidebar_title'], ["Prediction", "About", "Contac
 
 # Email input
 # Email sender (placeholder)
+email = st.text_input(tr['enter_email'], key="email")
+if email and st.button(tr['send_email'], key="email_btn"):
+    success = send_email(email, tr['title'], "See attached result.", "prediction_result.pdf")
+    if success:
+        st.success(tr['email_success'])
+    else:
+        st.error(tr['email_fail'])
+
 def send_email(recipient_email, subject, body, attachment_path):
     try:
         msg = EmailMessage()
