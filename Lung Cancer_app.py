@@ -60,7 +60,34 @@ page_bg_img = f"""
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
-   
+df = px.data.iris()
+# 🔬 Symptom Score Distribution by Diagnosis
+with st.container():
+    st.header("🔬 Symptom Score vs Diagnosis")
+    st.markdown("Visualizing the distribution of the overall symptom score across diagnostic outcomes.")
+    fig1 = px.box(df, x="DIAGNOSIS", y="SYMPTOM_SCORE", color="DIAGNOSIS", points="all")
+    st.plotly_chart(fig1)
+
+# 🍷 Lifestyle Risk Score
+with st.container():
+    st.header("🍷 Lifestyle Score by Diagnosis")
+    st.markdown("Lifestyle factors compared across patients with and without lung cancer.")
+    fig2 = px.violin(df, x="DIAGNOSIS", y="LIFESTYLE_SCORE", box=True, points="all", color="DIAGNOSIS")
+    st.plotly_chart(fig2)
+
+# 👤 Age Group Breakdown
+with st.container():
+    st.header("👤 Age Group Distribution")
+    st.markdown("Distribution of patients by age group and diagnosis.")
+    fig3 = px.histogram(df, x="AGE", color="DIAGNOSIS", nbins=30, marginal="rug")
+    st.plotly_chart(fig3)
+
+# ⚕️ Symptom Prevalence: Shortness of Breath
+with st.container():
+    st.header("⚕️ Shortness of Breath by Diagnosis")
+    st.markdown("How often shortness of breath is reported across diagnostic outcomes.")
+    fig4 = px.histogram(df, x="SHORTNESS OF BREATH", color="DIAGNOSIS", barmode="group")
+    st.plotly_chart(fig4)
 
 # 🌍 Language translations
 
