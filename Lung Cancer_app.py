@@ -21,6 +21,7 @@ import streamlit as st
 import base64
 import smtplib
 import io
+import plotly.express as px
 from email.message import EmailMessage
 from fpdf import FPDF
 from sklearn.inspection import permutation_importance
