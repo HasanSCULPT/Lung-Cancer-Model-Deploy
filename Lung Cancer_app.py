@@ -307,29 +307,7 @@ if page == "Prediction":
             'AGE_GROUP_Senior': [age_group_senior]
         })
 
-        for col in feature_names:
-            if col not in row:
-                row[col] = 0
-        row = row[feature_names]
-
-        prob = pipeline.predict_proba(row)[0][1]
-        pred = int(prob > threshold)
-
-        if pred == 1:
-            st.success(f"🛑 Predicted: LUNG CANCER (Probability: {prob:.2f})")
-        else:
-            st.success(f"✅ Predicted: NO LUNG CANCER (Probability: {prob:.2f})")
-
-        st.subheader("📊 Prediction Confidence")
-        fig, ax = plt.subplots()
-        bars = ax.bar(["No Lung Cancer", "Lung Cancer"], [1 - prob, prob], color=["green", "red"])
-        ax.set_ylim(0, 1)
-        ax.set_ylabel("Probability")
-        ax.set_title("Prediction Confidence")
-        for bar in bars:
-            yval = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.02, f"{yval:.2f}", ha='center', va='bottom')
-        st.pyplot(fig)
+     
 
 if st.button("Predict Individual"):
     row = pd.DataFrame({
