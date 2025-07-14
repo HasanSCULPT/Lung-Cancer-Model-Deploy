@@ -31,9 +31,11 @@ st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
 #import base64
 #import streamlit as st
 #Define background function
+import streamlit as st
 import base64
 
-@st.cache(allow_output_mutation=True)
+# Use the correct new caching method
+@st.cache_data
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
@@ -41,19 +43,21 @@ def get_base64_of_bin_file(bin_file):
 
 def set_png_as_page_bg(png_file):
     bin_str = get_base64_of_bin_file(png_file)
-    page_bg_img = '''
+    page_bg_img = f"""
     <style>
-    body {
-    background-image: url("data:image/png;base64,%s");
-    background-size: cover;
-    }
+    [data-testid="stAppViewContainer"] > .main {{
+        background-image: url("data:image/png;base64,{bin_str}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
     </style>
-    ''' % bin_str
-    
+    """
     st.markdown(page_bg_img, unsafe_allow_html=True)
-    return
 
-set_png_as_page_bg('background.png')
+# Apply background at the top of your app
+set_png_as_page_bg("background.png")
 
 
 
