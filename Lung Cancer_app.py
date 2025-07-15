@@ -354,18 +354,18 @@ if page == "Prediction":
                 row[col] = 0
         row = row[feature_names]
 
-        prob = pipeline.predict_proba(row)[0][1]
-        pred = int(prob > threshold)
+        prob = pipeline.predict_proba(row)[0][1]; pred = int(prob > threshold)
+        st.success(f"{'🛑 LUNG CANCER' if pred == 1 else '✅ NO LUNG CANCER'} (Probability: {prob:.2f})")
 
-        st.success(f"Prediction: {'LUNG CANCER 🛑' if pred else 'NO LUNG CANCER ✅'} (Prob: {prob:.2f})")
+        # ✅ Confidence Bar Chart
+        fig, ax = plt.subplots()
+        bars = ax.bar(["No Lung Cancer", "Lung Cancer"], [1 - prob, prob], color=["green", "red"])
+        ax.set_ylim(0, 1); ax.set_ylabel("Probability"); ax.set_title("Prediction Confidence")
+        for bar in bars:
+            yval = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.02, f"{yval:.2f}", ha='center')
+        st.pyplot(fig)
 
-        # ✅ SHAP Explanation
-        st.write("### 🔍 SHAP Explanation")
-        with st.spinner("Calculating SHAP values..."):
-            explainer = shap.KernelExplainer(pipeline.predict_proba, np.array(row))
-            shap_values = explainer.shap_values(np.array(row), nsamples=100)
-            shap.force_plot(explainer.expected_value[1], shap_values[1], row, matplotlib=True, show=False)
-            st.pyplot(bbox_inches='tight')
 
         # ✅ Export CSV + PDF
         result_df = pd.DataFrame({"Prediction": ["Lung Cancer" if pred else "No Lung Cancer"], "Probability": [prob]})
