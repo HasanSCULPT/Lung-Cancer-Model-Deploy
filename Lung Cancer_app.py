@@ -82,7 +82,7 @@ def get_translation(language):
             "email_fail": "❌ Failed to send email. Check configuration.",
             "language_select": "🌍 Select Language",
             "sidebar_title": "Navigate",
-            "individual_entry": "Welcome To the Diagnostics Centre, please enter your medical/patient information below to predict whether you're likely to have Lung Cancer",
+            "individual_entry": "Welcome To the Diagnostics Centre, please enter your medical/patient information below to predict whether patient is likely to have Lung Cancer or not",
             "about_title": "📘 About Us",
             "about_desc": "This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptoms and lifestyle.",
             "contact_title": "📧 Contact Us",
