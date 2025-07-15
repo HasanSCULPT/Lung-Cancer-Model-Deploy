@@ -289,12 +289,7 @@ if page == "Prediction":
             st.success(f"✅ Suggested Threshold: {best_thresh:.2f} (Recall: {best_recall:.2f})")
 
 
-        # ✅ Optimal Threshold Suggestion
-        fpr, tpr, thresholds = roc_curve((proba > 0.5).astype(int), proba)
-        youden_j = tpr - fpr; best_idx = np.argmax(youden_j); optimal_threshold = thresholds[best_idx]
-        st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
-        if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold); st.success(f"✅ Threshold updated to {threshold:.2f}")
-
+       
         
         # ✅ Prediction
         proba = pipeline.predict_proba(df_input)[:, 1]
