@@ -181,8 +181,23 @@ def get_translation(language):
     return translations.get(language, translations["en"])
 
 
-LANG_OPTIONS = {"en": "English"}
-selected_lang = st.sidebar.selectbox("🌍 Select Language", options=list(LANG_OPTIONS.keys()), format_func=lambda x: LANG_OPTIONS[x])
+# 🌐 Language Selector Setup
+LANG_OPTIONS = {
+    "en": "English",
+    "fr": "Français",
+    "ru": "Русский",
+    "ar": "العربية",
+    "uk": "Українська"
+}
+
+selected_lang = st.sidebar.selectbox(
+    "🌍 Select Language",
+    options=list(LANG_OPTIONS.keys()),
+    format_func=lambda x: LANG_OPTIONS[x],
+    key="lang"
+)
+
+# 🌐 Retrieve selected translation
 tr = get_translation(selected_lang)
 
 # ----------------------------
