@@ -58,7 +58,7 @@ def set_png_as_page_bg(png_file):
     """
     st.markdown(page_bg_img, unsafe_allow_html=True)
 
-set_png_as_page_bg("feathered_bg.png")
+set_png_as_page_bg("background.png")
 
 # ✅ Load Model & Features
 pipeline = joblib.load("lung_cancer_pipeline.pkl")
