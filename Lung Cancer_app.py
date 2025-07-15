@@ -40,12 +40,17 @@ st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
 # Background Image
 @st.cache_data
 def get_base64_of_bin_file(bin_file):
-    with open(bin_file, 'rb') as f:
-        return base64.b64encode(f.read()).decode()
+    try:
+        with open(bin_file, 'rb') as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    except FileNotFoundError:
+        return None
 
 def set_png_as_page_bg(png_file):
     bin_str = get_base64_of_bin_file(png_file)
-    page_bg_img = f"""
+    if bin_str:
+        page_bg_img = f"""
     <style>
     [data-testid="stAppViewContainer"] > .main {{
         background-image: url("data:image/png;base64,{bin_str}");
@@ -307,7 +312,7 @@ if page == "Prediction":
        
         
         # ✅ Prediction
-        proba = pipeline.predict_proba(df_input)[:, 1]
+        proba = pipeline.predict_proba(df_input)[0][1]
         prediction = (proba > threshold).astype(int)
 
         df_output = df_input.copy()
@@ -317,6 +322,36 @@ if page == "Prediction":
         st.write(f"### {tr['prediction_results']}")
         st.dataframe(df_output[["Probability", "Prediction"]])
         st.download_button("📥 " + tr['download_csv'], df_output.to_csv(index=False), "batch_predictions.csv", "text/csv")
+
+
+        # ROC Curve
+        st.write("### 🔍 ROC Curve")
+        fpr, tpr, roc_thresholds = roc_curve(prediction, proba)
+        roc_auc = auc(fpr, tpr)
+        fig_roc, ax_roc = plt.subplots()
+        ax_roc.plot(fpr, tpr, label=f"AUC = {roc_auc:.2f}")
+        ax_roc.plot([0, 1], [0, 1], linestyle="--", color="gray")
+        ax_roc.set_xlabel("False Positive Rate")
+        ax_roc.set_ylabel("True Positive Rate")
+        ax_roc.set_title("ROC Curve")
+        ax_roc.legend()
+        st.pyplot(fig_roc)
+
+        # Precision-Recall Curve
+        st.write("### 📈 Precision-Recall Curve")
+        precision, recall, pr_thresholds = precision_recall_curve(prediction, proba)
+        fig_pr, ax_pr = plt.subplots()
+        ax_pr.plot(recall, precision, color="green")
+        ax_pr.set_xlabel("Recall")
+        ax_pr.set_ylabel("Precision")
+        ax_pr.set_title("Precision-Recall Curve")
+        st.pyplot(fig_pr)
+
+        # Optimal Threshold Suggestion
+        youden_j = tpr - fpr
+        optimal_idx = np.argmax(youden_j)
+        optimal_threshold = roc_thresholds[optimal_idx]
+        st.sidebar.success(f"Recommended Threshold: {optimal_threshold:.2f}")
 
         # Histogram
         fig, ax = plt.subplots()
@@ -381,6 +416,13 @@ if page == "Prediction":
             ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.02, f"{yval:.2f}", ha='center')
         st.pyplot(fig)
 
+        # SHAP Explanation
+        explainer = shap.KernelExplainer(pipeline.predict_proba, np.zeros((1, len(feature_names))))
+        shap_values = explainer.shap_values(row)
+        st.write("###🧠 SHAP Explanation")
+        shap.force_plot(explainer.expected_value[1], shap_values[1], row, matplotlib=True)
+        st.pyplot()
+
 
         # ✅ Export CSV + PDF
         result_df = pd.DataFrame({"Prediction": ["Lung Cancer" if pred else "No Lung Cancer"], "Probability": [prob]})
@@ -396,3 +438,6 @@ if page == "Prediction":
         pdf.output(pdf_buffer)
         pdf_buffer.seek(0)
         st.download_button(label="📥 Download PDF", data=pdf_buffer, file_name="prediction_result.pdf", mime="application/pdf")
+
+
+
