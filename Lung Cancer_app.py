@@ -24,25 +24,13 @@ import io
 import plotly.express as px
 from email.message import EmailMessage
 from fpdf import FPDF
+from sklearn.metrics import roc_curve
 from sklearn.inspection import permutation_importance
 
 # =======================================
 # Lung Cancer Diagnostics App
 # =======================================
 
-import pandas as pd
-import joblib
-import numpy as np
-import matplotlib.pyplot as plt
-import shap
-import streamlit as st
-import base64
-import smtplib
-import io
-from email.message import EmailMessage
-from fpdf import FPDF
-from sklearn.metrics import roc_curve
-from sklearn.inspection import permutation_importance
 
 # -------------------------------
 # ✅ Streamlit Page Setup
