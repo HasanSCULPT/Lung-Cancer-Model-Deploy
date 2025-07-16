@@ -328,11 +328,15 @@ if page == "Prediction":
 
     
 
-        # Optimal Threshold Suggestion
-        youden_j = tpr - fpr
-        optimal_idx = np.argmax(youden_j)
-        optimal_threshold = roc_thresholds[optimal_idx]
-        st.sidebar.success(f"Recommended Threshold: {optimal_threshold:.2f}")
+       
+
+        # ✅ Optimal Threshold Suggestion
+        fpr, tpr, thresholds = roc_curve((proba > 0.5).astype(int), proba)
+        youden_j = tpr - fpr; best_idx = np.argmax(youden_j); optimal_threshold = thresholds[best_idx]
+        st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
+        if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold); st.success(f"✅ Threshold updated to {threshold:.2f}")
+
+        
 
         # Histogram
         fig, ax = plt.subplots()
