@@ -116,11 +116,13 @@ def send_email(recipient_email, subject, body, attachment_path):
         return False
 
 if page == "About":
-    st.write({"This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptomatic analytics and lifestyle.
-    This Diagnostic application allows for Individual Prediction + Batch CSV upload with validation & cleaning, Confidence chart for individual predictions, Toggle for SHAP or Permutation Importance for individual prediction. 
-    It should be noted also that in order to accurately execute raw batch predictions, datasets must be properly cleaned, features correctly encoded, because the model utilizes this numeric idetifiers 1 and 0, meaning 1 equals
-    Lung cancer while 0 equals No Lung cancer. Gender should also utilize numeric identifiers instead of MALE or FEMALE identifiers, these measures if taken would further enhance a more accurate predictions."
-    })
+    st.write("""This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptomatic analytics and lifestyle.
+    This Diagnostic application allows for Individual Prediction + Batch CSV upload with validation & cleaning, Confidence chart for individual predictions, Toggle for SHAP or 
+    Permutation Importance for individual prediction. 
+    It should be noted also that in order to accurately execute raw batch predictions, datasets must be properly cleaned, features correctly encoded, because the model utilizes this 
+    numeric idetifiers 1 and 0, meaning 1 equalsLung cancer while 0 equals No Lung cancer. Gender should also utilize numeric identifiers instead of MALE or FEMALE identifiers, these 
+    measures if taken would further enhance a more accurate predictions.""")
+    
 elif page == "Contact":
     st.write("Email: support@lungdiagnosis.ai")
 elif page == "Terms":
