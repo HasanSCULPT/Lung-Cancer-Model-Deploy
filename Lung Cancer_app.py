@@ -32,15 +32,6 @@ from sklearn.inspection import permutation_importance
 # Lung Cancer Diagnostics App
 # =======================================
 
-
-
-
-# =====================================
-# CONFIGURATION
-# =====================================
-# =====================================
-# CONFIGURATION
-# =====================================
 BACKGROUND_IMAGE = "background.png"
 LOGO_IMAGE = "logo.png"
 ENABLE_EMAIL = True  # Toggle email sending
@@ -82,7 +73,7 @@ def set_png_as_page_bg(png_file):
         """, unsafe_allow_html=True)
 
 if BACKGROUND_IMAGE:
-    set_png_as_page_bg(BACKGROUND_IMAGE)
+    set_png_as_page_bg("background.png")
 
 # =====================================
 # Load Model & Features
