@@ -367,6 +367,7 @@ if page == "Prediction":
         importance_df = pd.DataFrame(importance_data)
         fig3, ax3 = plt.subplots(figsize=(6, 4))
         ax3.barh(importance_df["Feature"], importance_df["Importance"], color='teal')
+        ax3.set_title("Permutation Importance (Precomputed)")
         st.pyplot(fig3)
     else:
         st.info("⬅️ Upload a CSV file to start prediction")
@@ -419,7 +420,7 @@ if page == "Prediction":
         # SHAP Explanation
         explainer = shap.KernelExplainer(pipeline.predict_proba, np.zeros((1, len(feature_names))))
         shap_values = explainer.shap_values(row)
-        st.write("###🧠 SHAP Explanation")
+        st.write("### SHAP Explanation")
         shap.force_plot(explainer.expected_value[1], shap_values[1], row, matplotlib=True)
         st.pyplot()
 
@@ -432,7 +433,7 @@ if page == "Prediction":
         pdf.add_page()
         pdf.set_font("Arial", size=12)
         pdf.cell(200, 10, txt="Lung Cancer Prediction Result", ln=True, align='C')
-        pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER 🛑' if pred else 'NO LUNG CANCER ✅'}", ln=True)
+        pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER' if pred else 'NO LUNG CANCER'}", ln=True)
         pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
         pdf_buffer = io.BytesIO()
         pdf.output(pdf_buffer)
