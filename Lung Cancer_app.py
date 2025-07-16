@@ -220,13 +220,7 @@ if st.button("Predict Individual"):
     ax.bar(["No Lung Cancer", "Lung Cancer"], [1 - prob, prob], color=["green", "red"])
     st.pyplot(fig)
 
-    # SHAP Explanation
-    explainer = shap.KernelExplainer(pipeline.predict_proba, np.zeros((1, len(feature_names))))
-    shap_values = explainer.shap_values(row)
-    st.write("### SHAP Explanation")
-    shap.force_plot(explainer.expected_value[1], shap_values[1], row, matplotlib=True)
-    st.pyplot()
-
+   
     # Export PDF
     pdf = FPDF()
     pdf.add_page()
