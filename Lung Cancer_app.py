@@ -324,28 +324,9 @@ if page == "Prediction":
         st.download_button("📥 " + tr['download_csv'], df_output.to_csv(index=False), "batch_predictions.csv", "text/csv")
 
 
-        # ROC Curve
-        st.write("### 🔍 ROC Curve")
-        fpr, tpr, roc_thresholds = roc_curve(prediction, proba)
-        roc_auc = auc(fpr, tpr)
-        fig_roc, ax_roc = plt.subplots()
-        ax_roc.plot(fpr, tpr, label=f"AUC = {roc_auc:.2f}")
-        ax_roc.plot([0, 1], [0, 1], linestyle="--", color="gray")
-        ax_roc.set_xlabel("False Positive Rate")
-        ax_roc.set_ylabel("True Positive Rate")
-        ax_roc.set_title("ROC Curve")
-        ax_roc.legend()
-        st.pyplot(fig_roc)
+      
 
-        # Precision-Recall Curve
-        st.write("### 📈 Precision-Recall Curve")
-        precision, recall, pr_thresholds = precision_recall_curve(prediction, proba)
-        fig_pr, ax_pr = plt.subplots()
-        ax_pr.plot(recall, precision, color="green")
-        ax_pr.set_xlabel("Recall")
-        ax_pr.set_ylabel("Precision")
-        ax_pr.set_title("Precision-Recall Curve")
-        st.pyplot(fig_pr)
+    
 
         # Optimal Threshold Suggestion
         youden_j = tpr - fpr
