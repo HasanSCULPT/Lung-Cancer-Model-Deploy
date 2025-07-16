@@ -233,7 +233,7 @@ if page == "Prediction":
         ax.set_ylim(0,1)
         st.pyplot(fig)
 
-        explanation_method = st.radio("Select Explanation Method",["Permutation Importance"])
+        
         
         else:
             st.write("### Permutation Importance")
