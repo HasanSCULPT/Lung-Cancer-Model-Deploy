@@ -35,18 +35,7 @@ from sklearn.inspection import permutation_importance
 # ----------------------------
 # ✅ Streamlit Configuration
 # ----------------------------
-import streamlit as st
-import pandas as pd
-import numpy as np
-import base64
-import joblib
-import matplotlib.pyplot as plt
-import shap
-import io
-from fpdf import FPDF
-from sklearn.metrics import roc_curve, recall_score
-from email.message import EmailMessage
-import smtplib
+
 
 st.set_page_config(page_title="Lung Cancer Diagnostics App", layout="centered")
 
