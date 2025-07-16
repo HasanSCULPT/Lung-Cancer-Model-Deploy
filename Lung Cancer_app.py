@@ -178,17 +178,15 @@ if uploaded_file:
     ax.axvline(threshold, color='red', linestyle='--')
     st.pyplot(fig)
 
-    
-    # ✅ Precomputed Permutation Importance
+ # ✅ Precomputed Permutation Importance
         importance_data = {
-        "Feature": ["SYMPTOM_SCORE", "LIFESTYLE_SCORE", "SHORTNESS OF BREATH", "SWALLOWING DIFFICULTY", "YELLOW_FINGERS"],
-        "Importance": [0.0629, 0.0371, 0.0274, 0.0258, 0.0081]
+            "Feature": ["SYMPTOM_SCORE", "LIFESTYLE_SCORE", "SHORTNESS OF BREATH", "SWALLOWING DIFFICULTY", "YELLOW_FINGERS"],
+            "Importance": [0.0629, 0.0371, 0.0274, 0.0258, 0.0081]
         }
-    importance_df = pd.DataFrame(importance_data)
-    fig3, ax3 = plt.subplots(figsize=(6, 4))
-    ax3.barh(importance_df["Feature"], importance_df["Importance"], color='teal')
-    st.pyplot(fig3)
-
+        importance_df = pd.DataFrame(importance_data)
+        fig3, ax3 = plt.subplots(figsize=(6, 4))
+        ax3.barh(importance_df["Feature"], importance_df["Importance"], color='teal')
+        st.pyplot(fig3)
 
     
 
