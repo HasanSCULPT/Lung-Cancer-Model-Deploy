@@ -292,24 +292,51 @@ if page == "Prediction":
                 df_input[col] = 0
         df_input = df_input[feature_names]
 
-        # ✅ Automatic Threshold Suggestion
-        st.write("🔍 Calculating optimal threshold for high recall...")
-        y_true = None  # If labels exist in data
-        proba_temp = pipeline.predict_proba(df_input)[:, 1]
-        best_thresh = threshold
-        best_recall = 0
-        if "LUNG_CANCER" in df_input.columns:  # Optional
-            y_true = df_input["LUNG_CANCER"]
-            for t in np.arange(0.1, 0.9, 0.01):
-                y_pred_temp = (proba_temp > t).astype(int)
-                recall = recall_score(y_true, y_pred_temp)
-                if recall > best_recall:
-                    best_recall = recall
-                    best_thresh = t
-            st.success(f"✅ Suggested Threshold: {best_thresh:.2f} (Recall: {best_recall:.2f})")
+        # ============================
+# ✅ Automatic Threshold Suggestion Section
+# ============================
+st.write("### 🔍 Automatic Threshold Suggestions")
 
+# Current probabilities from model
+proba_temp = pipeline.predict_proba(df_input)[:, 1]
 
-       
+# Initialize default
+suggested_recall_thresh = None
+suggested_roc_thresh = None
+
+# -------------------------
+# ✅ Option 1: Maximize Recall (if labels exist)
+# -------------------------
+if "LUNG_CANCER" in df_input.columns:
+    y_true = df_input["LUNG_CANCER"]
+    best_recall = 0
+    best_thresh = threshold
+    for t in np.arange(0.1, 0.9, 0.01):
+        y_pred_temp = (proba_temp > t).astype(int)
+        recall = recall_score(y_true, y_pred_temp)
+        if recall > best_recall:
+            best_recall = recall
+            best_thresh = t
+    suggested_recall_thresh = best_thresh
+    st.success(f"✅ Suggested Threshold (Max Recall): {best_thresh:.2f} (Recall: {best_recall:.2f})")
+    if st.button("Apply Max Recall Threshold"):
+        threshold = float(best_thresh)
+        st.success(f"✅ Threshold updated to {threshold:.2f}")
+
+# -------------------------
+# ✅ Option 2: ROC-based (Youden's J Index)
+# -------------------------
+fpr, tpr, thresholds = roc_curve((proba_temp > 0.5).astype(int), proba_temp)
+youden_j = tpr - fpr
+best_idx = np.argmax(youden_j)
+optimal_threshold = thresholds[best_idx]
+suggested_roc_thresh = optimal_threshold
+st.info(f"🔍 Suggested Threshold (ROC Optimal): {optimal_threshold:.2f}")
+if st.button("Apply ROC-Optimal Threshold"):
+    threshold = float(optimal_threshold)
+    st.success(f"✅ Threshold updated to {threshold:.2f}")
+
+ 
         
         # ✅ Prediction
         proba = pipeline.predict_proba(df_input)[0][1]
@@ -330,12 +357,7 @@ if page == "Prediction":
 
        
 
-        # ✅ Optimal Threshold Suggestion
-        fpr, tpr, thresholds = roc_curve((proba > 0.5).astype(int), proba)
-        youden_j = tpr - fpr; best_idx = np.argmax(youden_j); optimal_threshold = thresholds[best_idx]
-        st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
-        if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold); st.success(f"✅ Threshold updated to {threshold:.2f}")
-
+       
         
 
         # Histogram
