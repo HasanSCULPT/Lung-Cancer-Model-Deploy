@@ -236,13 +236,13 @@ if page == "Prediction":
         
         
         
-            st.write("### Permutation Importance")
-            result = permutation_importance(pipeline,row,[pred],n_repeats=5,random_state=42)
-            importance_df = pd.DataFrame({"Feature":feature_names,"Importance":result.importances_mean})
-            importance_df = importance_df.sort_values(by="Importance",ascending=False)
-            fig, ax = plt.subplots()
-            ax.barh(importance_df["Feature"][:10],importance_df["Importance"][:10],color='teal')
-            st.pyplot(fig)
+        st.write("### Permutation Importance")
+        result = permutation_importance(pipeline,row,[pred],n_repeats=5,random_state=42)
+        importance_df = pd.DataFrame({"Feature":feature_names,"Importance":result.importances_mean})
+        importance_df = importance_df.sort_values(by="Importance",ascending=False)
+        fig, ax = plt.subplots()
+        ax.barh(importance_df["Feature"][:10],importance_df["Importance"][:10],color='teal')
+        st.pyplot(fig)
 
         pdf = FPDF()
         pdf.add_page()
