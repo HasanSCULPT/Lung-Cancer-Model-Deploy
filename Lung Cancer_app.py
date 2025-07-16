@@ -95,12 +95,35 @@ page = st.sidebar.radio("Navigate", ["Prediction", "About", "Contact", "Terms"])
 # ----------------------------
 # ✅ About & Contact Pages
 # ----------------------------
+def send_email(recipient_email, subject, body, attachment_path):
+    try:
+        msg = EmailMessage()
+        msg["Subject"] = subject
+        msg["From"] = "your_email@example.com"
+        msg["To"] = recipient_email
+        msg.set_content(body)
+
+        with open(attachment_path, "rb") as f:
+            file_data = f.read()
+            file_name = f.name
+
+        msg.add_attachment(file_data, maintype="application", subtype="pdf", filename=file_name)
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+            smtp.login("your_email@example.com", "your_password")
+            smtp.send_message(msg)
+        return True
+    except Exception:
+        return False
+
 if page == "About":
-    st.write("This app uses machine learning to predict lung cancer risk. Educational use only.")
+    st.write("This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptomatic analytics and lifestyle.
+    This Diagnostic application allows for Individual Prediction + Batch CSV upload with validation & cleaning, Confidence chart for individual predictions, Toggle for SHAP or Permutation Importance for individual prediction. 
+    It should be noted also that in order to accurately execute raw batch predictions, datasets must be properly cleaned, features correctly encoded, because the model utilizes this numeric idetifiers 1 and 0, meaning 1 equals
+    Lung cancer while 0 equals No Lung cancer. Gender should also utilize numeric identifiers instead of MALE or FEMALE identifiers, these measures if taken would further enhance a more accurate predictions.")
 elif page == "Contact":
     st.write("Email: support@lungdiagnosis.ai")
 elif page == "Terms":
-    st.write("Disclaimer: This tool is not a substitute for medical advice.")
+    st.write("Disclaimer: This tool is for educational and diagnostic support only. Not an absolute substitute for professional medical advice.")
 
 # ----------------------------
 # ✅ Prediction Page
@@ -207,14 +230,8 @@ if page == "Prediction":
         ax.set_ylim(0,1)
         st.pyplot(fig)
 
-        explanation_method = st.radio("Select Explanation Method",["SHAP","Permutation Importance"])
-        if explanation_method=="SHAP":
-            st.write("### SHAP Explanation")
-            explainer = shap.KernelExplainer(pipeline.predict_proba, background_sample)
-            shap_values = explainer.shap_values(row)
-            fig, ax = plt.subplots()
-            shap.summary_plot(shap_values[1], row, plot_type="bar", show=False)
-            st.pyplot(fig)
+        explanation_method = st.radio("Select Explanation Method",["Permutation Importance"])
+        
         else:
             st.write("### Permutation Importance")
             result = permutation_importance(pipeline,row,[pred],n_repeats=5,random_state=42)
