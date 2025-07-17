@@ -221,10 +221,10 @@ for t in np.arange(0.1, 0.9, 0.01):
      if recall > best_recall:
         best_recall = recall
         best_thresh = t
-        st.success(f"✅ Max Recall Threshold: {best_thresh:.2f}")
-     if st.button("Apply Max Recall"):
-        threshold = best_thresh
-        st.success(f"Threshold updated to {threshold:.2f}")
+st.success(f"✅ Max Recall Threshold: {best_thresh:.2f}")
+if st.button("Apply Max Recall"):
+   threshold = best_thresh
+   st.success(f"Threshold updated to {threshold:.2f}")
 
 # ✅ Option 2: ROC-Optimal Threshold (Youden's J)
         fpr, tpr, thresholds_roc = roc_curve((proba_temp > 0.5).astype(int), proba_temp)
