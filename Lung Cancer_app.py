@@ -105,7 +105,7 @@ background_data = {
     "AGE_GROUP_Middle-aged": [1, 0, 1, 0],
     "CHRONIC DISEASE": [0, 1, 0, 1]
 }
-
+X_background = pd.DataFrame(background_data)
 # ✅ Expected Features
 expected_features = [
     "AGE", "GENDER", "SMOKING", "YELLOW_FINGERS", "ANXIETY", "PEER_PRESSURE",
@@ -132,7 +132,13 @@ importance_data = {
 }
 
 
-
+# Plot
+sorted_idx = result.importances_mean.argsort()
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.barh(X_background.columns[sorted_idx], result.importances_mean[sorted_idx])
+ax.set_title("Permutation Importance (Based on Sample)")
+plt.tight_layout()
+st.pyplot(fig)
 
 # ✅ Language Translations
 def get_translation(language):
