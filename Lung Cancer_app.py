@@ -95,6 +95,13 @@ page = st.sidebar.radio("Navigate", ["Prediction", "About", "Contact", "Terms"])
 # ----------------------------
 # ✅ About & Contact Pages
 # ----------------------------
+email = st.text_input(tr['enter_email'], key="email")
+if email and st.button(tr['send_email'], key="email_btn"):
+    success = send_email(email, tr['title'], "See attached result.", "prediction_result.pdf")
+    if success:
+        st.success(tr['email_success'])
+    else:
+        st.error(tr['email_fail'])
 def send_email(recipient_email, subject, body, attachment_path):
     try:
         msg = EmailMessage()
@@ -132,9 +139,7 @@ elif page == "Contact":
 elif page == "Terms":
     st.header("📜 Terms")
     st.write("Disclaimer: This tool is for educational and diagnostic support only. Not an absolute substitute for professional medical advice.")
-else:
-    # Prediction Page
-    st.header(("Welcom To The Lung Cancer Diagnostics Centre",=("font size 12"))
+
 
 # ----------------------------
 # ✅ Prediction Page
