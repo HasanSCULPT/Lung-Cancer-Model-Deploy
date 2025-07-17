@@ -218,6 +218,12 @@ elif page == "Prediction":
         st.write(f"### {tr['prediction_results']}"); st.dataframe(df_output[["Probability","Prediction"]])
         st.download_button("📥 " + tr['download_csv'], df_output.to_csv(index=False), "batch_predictions.csv","text/csv")
 
+    # Histogram
+        fig, ax = plt.subplots()
+        ax.hist(proba, bins=10, edgecolor='k')
+        ax.axvline(threshold, color='red', linestyle='--')
+        st.pyplot(fig)
+
     # ✅ Individual Prediction
     st.write("---"); st.write(f"### {tr['individual_entry']}")
     age = st.number_input("Age",0,100,50); gender = st.selectbox("Gender",["Male","Female"])
