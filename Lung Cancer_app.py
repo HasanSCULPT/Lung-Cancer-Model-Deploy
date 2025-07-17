@@ -107,30 +107,7 @@ background_data = {
 }
 
 
-# ✅ Expected Features
-expected_features = [
-    "AGE", "GENDER", "SMOKING", "YELLOW_FINGERS", "ANXIETY", "PEER_PRESSURE",
-    "CHRONIC DISEASE", "FATIGUE", "ALLERGY", "WHEEZING", "ALCOHOL CONSUMING",
-    "COUGHING", "SHORTNESS OF BREATH", "SWALLOWING DIFFICULTY", "CHEST PAIN",
-    "SYMPTOM_SCORE", "LIFESTYLE_SCORE", "LIFESTYLE_RISK", "AGE_GROUP_Senior", "AGE_GROUP_Middle-aged"
-]
 
-# ✅ Static Precomputed Permutation Importance
-importance_data = {
-    "Feature": [
-        "SYMPTOM_SCORE", "LIFESTYLE_SCORE", "SHORTNESS OF BREATH",
-        "SWALLOWING DIFFICULTY", "ALCOHOL CONSUMING", "ANXIETY",
-        "COUGHING", "WHEEZING", "SMOKING", "GENDER", "AGE_GROUP_Senior",
-        "AGE", "YELLOW_FINGERS", "PEER_PRESSURE", "CHEST PAIN",
-        "LIFESTYLE_RISK", "ALLERGY", "FATIGUE", "AGE_GROUP_Middle-aged", "CHRONIC DISEASE"
-    ],
-    "Importance": [
-        6.29e-02, 3.70e-02, 2.74e-02, 2.58e-02, 2.41e-02,
-        2.41e-02, 2.09e-02, 1.93e-02, 1.93e-02, 1.12e-02,
-        9.67e-03, 9.67e-03, 8.06e-03, 8.06e-03, 4.83e-03,
-        1.61e-03, 0.0, 0.0, 0.0, 0.0
-    ]
-}
 
 X_background = pd.DataFrame(background_data)
 # Get feature names the pipeline expects
