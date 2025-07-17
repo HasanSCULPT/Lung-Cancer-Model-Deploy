@@ -136,11 +136,22 @@ def get_translation(language):
     return translations.get(language, translations["en"])
 
 # 🌐 Language Selector
-LANG_OPTIONS = {"en": "English", "fr": "Français"}
-selected_lang = st.sidebar.selectbox("🌍 Select Language", options=list(LANG_OPTIONS.keys()),
-                                     format_func=lambda x: LANG_OPTIONS[x], key="lang")
-tr = get_translation(selected_lang)
+LANG_OPTIONS = {
+    "en": "English",
+    "fr": "Français",
+    "ru": "Русский",
+    "ar": "العربية",
+    "uk": "Українська"
+}
+selected_lang = st.sidebar.selectbox(
+    "🌍 Select Language",
+    options=list(LANG_OPTIONS.keys()),
+    format_func=lambda x: LANG_OPTIONS[x],
+    key="lang"
+)
 
+# 🌐 Retrieve selected translation
+tr = get_translation(selected_lang)
 # ----------------------------
 # ✅ Header Section
 # ----------------------------
@@ -151,6 +162,15 @@ st.write(f"## {tr['subtitle']}")
 # Sidebar Navigation
 page = st.sidebar.selectbox(tr['sidebar_title'], ["Prediction", "About", "Contact", "Terms"], key="page")
 
+# Email input
+# Email sender (placeholder)
+email = st.text_input(tr['enter_email'], key="email")
+if email and st.button(tr['send_email'], key="email_btn"):
+    success = send_email(email, tr['title'], "See attached result.", "prediction_result.pdf")
+    if success:
+        st.success(tr['email_success'])
+    else:
+        st.error(tr['email_fail'])
 # ----------------------------
 # ✅ Email Setup (Placeholder)
 # ----------------------------
