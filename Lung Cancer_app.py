@@ -230,9 +230,11 @@ elif page == "Prediction":
         st.download_button("📥 " + tr['download_csv'], df_output.to_csv(index=False), "batch_predictions.csv","text/csv")
 
     # Histogram
+        
         fig, ax = plt.subplots()
-        ax.hist(proba, bins=10, edgecolor='k')
+        ax.hist(proba_temp, bins=10, edgecolor='k')
         ax.axvline(threshold, color='red', linestyle='--')
+        ax.set_title("Prediction Probability Distribution")
         st.pyplot(fig)
 
     # ✅ Individual Prediction
