@@ -118,20 +118,8 @@ def send_email(recipient_email, subject, body, attachment_path):
     except Exception:
         return False
         
-# Page Routing
-if page == "About":
-    st.title(tr['about_title'])
-    st.write(tr['about_desc'])
-elif page == "Contact":
-    st.title(tr['contact_title'])
-    st.write("Phone: +234-000-0000")
-    st.write("Email: support@lungdiagnosis.ai")
-elif page == "Terms":
-    st.title(tr['terms_title'])
-    st.write(tr['terms_text'])
-
 # -----------------------------
-# Pages
+# Pages Routing
 # -----------------------------
 if page == "About":
     st.header("📘 About Us")
