@@ -133,25 +133,7 @@ importance_data = {
 
 
 
-# Get feature names the pipeline expects
-expected_features = pipeline.feature_names_in_
 
-# Align columns in background data
-
-
-X_background = pd.DataFrame(background_data)
-y_background = np.random.randint(0, 2, size=len(X_background))  # Dummy labels for scoring
-# Compute permutation importance on background sample
-result = permutation_importance(pipeline, X_background, y_background,
-scoring='accuracy', n_repeats=10, random_state=42)
-
-# Plot
-sorted_idx = result.importances_mean.argsort()
-fig, ax = plt.subplots(figsize=(8, 6))
-ax.barh(X_background.columns[sorted_idx], result.importances_mean[sorted_idx])
-ax.set_title("Permutation Importance (Based on Sample)")
-plt.tight_layout()
-st.pyplot(fig)
 # ✅ Language Translations
 def get_translation(language):
     translations = {
