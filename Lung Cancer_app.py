@@ -86,34 +86,142 @@ feature_names = joblib.load("feature_names.pkl")
 
 # ✅ Language Translations
 def get_translation(language):
-    translations = {
-        "en": {"title": "Lung Cancer Diagnostics Centre", "subtitle": "By HasanSCULPT | DSA 2025",
-               "upload_csv": "Upload your CSV data", "prediction_results": "Prediction Results",
-               "download_csv": "Download Results CSV", "export": "Export Result",
-               "download_csv_single": "Download CSV", "download_pdf": "Download PDF",
-               "enter_email": "Enter your email address to receive results", "send_email": "Send Email",
-               "email_success": "✅ Email sent successfully!", "email_fail": "❌ Failed to send email.",
-               "language_select": "🌍 Select Language", "sidebar_title": "Navigate",
-               "individual_entry": "Enter patient information for individual prediction",
-               "about_title": "📘 About Us", "about_desc": """This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptomatic analytics and lifestyle.
+    "en": {
+            "title": "Lung Cancer Diagnostics Centre",
+            "subtitle": "By HasanSCULPT | DSA 2025",
+            "upload_csv": "Upload your CSV data",
+            "prediction_results": "Prediction Results",
+            "download_csv": "Download Results CSV",
+            "export": "Export Result",
+            "download_csv_single": "Download CSV",
+            "download_pdf": "Download PDF",
+            "enter_email": "Enter your email address to receive results",
+            "send_email": "Send Email",
+            "email_success": "✅ Email sent successfully!",
+            "email_fail": "❌ Failed to send email. Check configuration.",
+            "language_select": "🌍 Select Language",
+            "sidebar_title": "Navigate",
+            "individual_entry": " Please enter your medical/patient information below to predict whether you're likely to have Lung Cancer or not.",
+            "about_title": "📘 About Us",
+            "about_desc": """This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptomatic analytics and lifestyle.
     This Diagnostic application allows for Individual Prediction + Batch CSV upload with validation & cleaning, Confidence chart for individual predictions, Toggle for SHAP or 
     Permutation Importance for individual prediction. 
     It should be noted also that in order to accurately execute raw batch predictions, datasets must be properly cleaned, features correctly encoded, because the model utilizes this 
     numeric idetifiers 1 and 0, meaning 1 equalsLung cancer while 0 equals No Lung cancer. Gender should also utilize numeric identifiers instead of MALE or FEMALE identifiers, these 
     measures if taken would further enhance a more accurate predictions.""",
-               "contact_title": "📧 Contact Us", "terms_title": "📜 Terms & Conditions",
-               "terms_text": "Disclaimer: This tool is for educational and diagnostic support only. Not an absolute substitute for professional medical advice."},
-        "fr": {"title": "Centre de Diagnostic du Cancer du Poumon", "subtitle": "Par HasanSCULPT | DSA 2025",
-               "upload_csv": "Téléchargez votre fichier CSV", "prediction_results": "Résultats de la prédiction",
-               "download_csv": "Télécharger CSV", "export": "Exporter le résultat",
-               "download_csv_single": "Télécharger CSV", "download_pdf": "Télécharger PDF",
-               "enter_email": "Entrez votre email", "send_email": "Envoyer l'email",
-               "email_success": "✅ Email envoyé avec succès!", "email_fail": "❌ Échec de l'envoi de l'email.",
-               "language_select": "🌍 Sélectionnez la langue", "sidebar_title": "Navigation",
-               "individual_entry": "Entrez les informations du patient",
-               "about_title": "📘 À propos", "about_desc": "Cette application prédit le risque de cancer du poumon.",
-               "contact_title": "📧 Contactez-nous", "terms_title": "📜 Conditions générales",
-               "terms_text": "Cet outil est à des fins éducatives uniquement."}
+            "contact_title": "📧 Contact Us",
+            "terms_title": "📜 Terms & Conditions",
+            "terms_text": """Disclaimer: It should be noted that, this tool is for educational and diagnostic support only. Not an absolute substitute for a certified professional medical advice."""
+        },
+        "fr": {
+            "title": "Centre de Diagnostic du Cancer du Poumon",
+            "subtitle": "Par HasanSCULPT | DSA 2025",
+            "upload_csv": "Téléchargez votre fichier CSV",
+            "prediction_results": "Résultats de la prédiction",
+            "download_csv": "Télécharger les résultats CSV",
+            "export": "Exporter le résultat",
+            "download_csv_single": "Télécharger CSV",
+            "download_pdf": "Télécharger PDF",
+            "enter_email": "Entrez votre adresse e-mail pour recevoir les résultats",
+            "send_email": "Envoyer l'e-mail",
+            "email_success": "✅ Email envoyé avec succès !",
+            "email_fail": "❌ Échec de l'envoi de l'e-mail.",
+            "language_select": "🌍 Sélectionnez la langue",
+            "sidebar_title": "Navigation",
+            "individual_entry": "Ou entrez les informations individuelles du patient",
+            "about_title": "📘 À propos de nous",
+            "about_desc": """Cette application, développée par HasanSCULPT, facilite la prédiction préliminaire du risque de cancer du poumon grâce à l'apprentissage automatique d'ensemble, basé sur l'analyse des symptômes et le mode de vie.
+
+Cette application de diagnostic permet la prédiction individuelle et le téléchargement par lots de fichiers CSV avec validation et nettoyage, ainsi qu'un graphique de confiance pour les prédictions individuelles. Elle permet également de basculer entre SHAP et l'importance des permutations pour les prédictions individuelles.
+
+Il convient également de noter que pour exécuter avec précision des prédictions brutes par lots, les ensembles de données doivent être correctement nettoyés et les caractéristiques correctement codées, car le modèle utilise les identifiants numériques 1 et 0, ce qui signifie que 1 correspond à un cancer du poumon et 0 à l'absence de cancer du poumon. Le sexe doit également utiliser des identifiants numériques plutôt que les identifiants HOMME ou FÉMININ. Ces mesures, si elles sont prises, amélioreraient encore la précision des prédictions.""",
+            "contact_title": "📧 Contactez-nous",
+            "terms_title": "📜 Conditions générales",
+            "terms_text": """Avertissement : Cet outil est uniquement destiné à des fins éducatives et diagnostiques. Il ne remplace pas un avis médical professionnel certifié."""
+        },
+        "ru": {
+            "title": "Центр Диагностики Рака Легких",
+            "subtitle": "ХасанСКАЛЬПТ | DSA 2025",
+            "upload_csv": "Загрузите ваш CSV файл",
+            "prediction_results": "Результаты прогноза",
+            "download_csv": "Скачать CSV с результатами",
+            "export": "Экспортировать результат",
+            "download_csv_single": "Скачать CSV",
+            "download_pdf": "Скачать PDF",
+            "enter_email": "Введите ваш email для получения результата",
+            "send_email": "Отправить email",
+            "email_success": "✅ Email успешно отправлен!",
+            "email_fail": "❌ Не удалось отправить Email.",
+            "language_select": "🌍 Выберите язык",
+            "sidebar_title": "Навигация",
+            "individual_entry": "Или введите информацию о пациенте",
+            "about_title": "📘 О нас",
+            "about_desc": """Это приложение разработано компанией HasanSCULPT для предварительного прогнозирования риска рака лёгких с использованием ансамблевого машинного обучения на основе симптоматической аналитики и образа жизни.
+Это диагностическое приложение позволяет выполнять индивидуальные прогнозы + пакетную загрузку CSV-файлов с проверкой и очисткой, использовать диаграмму достоверности для индивидуальных прогнозов, переключаться на SHAP или
+
+перестановку важности для индивидуального прогноза.
+Следует также отметить, что для точного выполнения первичных пакетных прогнозов наборы данных должны быть правильно очищены, а признаки должны быть правильно закодированы, поскольку модель использует
+числовые идентификаторы 1 и 0, то есть 1 означает наличие рака лёгких, а 0 — отсутствие рака лёгких. Для определения пола также следует использовать числовые идентификаторы вместо идентификаторов МУЖСКОЙ или ЖЕНСКИЙ. Эти
+
+меры, принятые для повышения точности прогнозов.""",
+,
+            "contact_title": "📧 Связаться с нами",
+            "terms_title": "📜 Условия использования",
+            "terms_text": """Отказ от ответственности: следует отметить, что данный инструмент предназначен исключительно для образовательных и диагностических целей. Он не является абсолютной заменой консультации сертифицированного специалиста-врача."""
+        },
+        "ar": {
+            "title": "مركز تشخيص سرطان الرئة",
+            "subtitle": "بواسطة حسنSculpt | DSA 2025",
+            "upload_csv": "قم بتحميل ملف CSV الخاص بك",
+            "prediction_results": "نتائج التنبؤ",
+            "download_csv": "تحميل نتائج CSV",
+            "export": "تصدير النتيجة",
+            "download_csv_single": "تحميل CSV",
+            "download_pdf": "تحميل PDF",
+            "enter_email": "أدخل بريدك الإلكتروني لتلقي النتائج",
+            "send_email": "إرسال بريد إلكتروني",
+            "email_success": "✅ تم إرسال البريد الإلكتروني بنجاح!",
+            "email_fail": "❌ فشل في إرسال البريد الإلكتروني.",
+            "language_select": "🌍 اختر اللغة",
+            "sidebar_title": "القائمة الجانبية",
+            "individual_entry": """أدخل معلومات المريض الفردية",
+            "about_title": "📘 معلومات عنا",
+            "about_desc": """تم تطوير هذا التطبيق بواسطة HasanSCULPT للمساعدة في التنبؤ الأولي بمخاطر الإصابة بسرطان الرئة باستخدام التعلم الآلي التجميعي القائم على تحليلات الأعراض ونمط الحياة.
+
+يتيح هذا التطبيق التشخيصي التنبؤ الفردي + تحميل ملف CSV دفعة واحدة مع التحقق والتنظيف، ومخطط الثقة للتنبؤات الفردية، وتفعيل SHAP أو أهمية التبديل للتنبؤ الفردي.
+
+تجدر الإشارة أيضًا إلى أنه لتنفيذ تنبؤات الدفعات الخام بدقة، يجب تنظيف مجموعات البيانات بشكل صحيح، وترميز الميزات بشكل صحيح، لأن النموذج يستخدم هذه المعرفات الرقمية 1 و0، أي أن 1 يعني سرطان الرئة بينما 0 يعني عدم وجود سرطان الرئة. يجب أيضًا استخدام معرفات رقمية لتحديد الجنس بدلاً من معرفات الذكور أو الإناث، فهذه الإجراءات، إذا تم اتخاذها، ستعزز دقة التنبؤات..""",
+            "contact_title": "📧 تواصل معنا",
+            "terms_title": "📜 الشروط والأحكام",
+            "terms_text": """إخلاء مسؤولية: تجدر الإشارة إلى أن هذه الأداة مخصصة للدعم التعليمي والتشخيصي فقط. وليست بديلاً مطلقًا عن استشارة طبية مهنية معتمدة."""
+        },
+        "uk": {
+            "title": "Центр Діагностики Раку Легенів",
+            "subtitle": "ХасанСКАЛЬПТ | DSA 2025",
+            "upload_csv": "Завантажте свій CSV файл",
+            "prediction_results": "Результати прогнозу",
+            "download_csv": "Завантажити результати CSV",
+            "export": "Експортувати результат",
+            "download_csv_single": "Завантажити CSV",
+            "download_pdf": "Завантажити PDF",
+            "enter_email": "Введіть свою електронну пошту для отримання результатів",
+            "send_email": "Надіслати Email",
+            "email_success": "✅ Email успішно надіслано!",
+            "email_fail": "❌ Не вдалося надіслати Email.",
+            "language_select": "🌍 Виберіть мову",
+            "sidebar_title": "Навігація",
+            "individual_entry": "Або введіть інформацію про пацієнта",
+            "about_title": "📘 Про нас",
+            "about_desc": """Цей додаток розроблено HasanSCULPT для допомоги у попередньому прогнозуванні ризику раку легень за допомогою ансамбльового машинного навчання на основі симптоматичної аналітики та способу життя.
+
+Цей діагностичний додаток дозволяє виконувати індивідуальне прогнозування + пакетне завантаження CSV з перевіркою та очищенням, діаграму достовірності для індивідуальних прогнозів, перемикання для SHAP або 
+
+важливість перестановок для індивідуального прогнозу. Слід також зазначити, що для точного виконання пакетних прогнозів необроблених даних набори даних повинні бути належним чином очищені, а ознаки правильно закодовані, оскільки модель використовує ці числові ідентифікатори 1 та 0, тобто 1 дорівнює раку легень, а 0 дорівнює відсутності раку легень. Стать також повинна використовувати числові ідентифікатори замість ідентифікаторів ЧОЛОВІК або ЖІНКА, ці заходи, якщо їх вжити, ще більше підвищать точність прогнозів.
+""",
+            "contact_title": "📧 Зв'язатися з нами",
+            "terms_title": "📜 Умови використання",
+            "terms_text": """Застереження: Слід зазначити, що цей інструмент призначений лише для освітньої та діагностичної підтримки. Не є повною заміною консультації сертифікованого професійного медичного працівника."""
+        }
     }
     return translations.get(language, translations["en"])
 
