@@ -246,10 +246,10 @@ elif page == "Prediction":
 
         # ✅ Toggle SHAP or Permutation
         
-            perm = permutation_importance(pipeline,row,[pred],n_repeats=5,random_state=42)
-            st.write("### Permutation Importance")
-            fig3, ax3 = plt.subplots(); ax3.barh(feature_names, perm.importances_mean,color='teal')
-            ax3.set_title("Permutation Importance"); st.pyplot(fig3)
+        perm = permutation_importance(pipeline,row,[pred],n_repeats=5,random_state=42)
+        st.write("### Permutation Importance")
+        fig3, ax3 = plt.subplots(); ax3.barh(feature_names, perm.importances_mean,color='teal')
+        ax3.set_title("Permutation Importance"); st.pyplot(fig3)
 
         # ✅ Export PDF
         pdf = FPDF(); pdf.add_page(); pdf.set_font("Arial",size=12)
