@@ -100,19 +100,7 @@ set_png_as_page_bg("background.png")
 pipeline = joblib.load("lung_cancer_pipeline.pkl")
 feature_names = joblib.load("feature_names.pkl")
 
-# ✅ Sample Data for SHAP
-sample_background = pd.DataFrame({
-    'AGE': [50, 60, 45, 70, 55],
-    'GENDER': [1, 1, 0, 1, 0],
-    'SMOKING': [1, 1, 0, 1, 0],
-    'ANXIETY': [0, 1, 0, 1, 0],
-    'ALCOHOL CONSUMING': [0, 1, 0, 1, 0],
-    'PEER_PRESSURE': [1, 0, 1, 0, 1],
-    'COUGHING': [1, 1, 0, 1, 0],
-    'SHORTNESS OF BREATH': [0, 1, 0, 1, 0],
-    'SYMPTOM_SCORE': [5, 7, 3, 8, 4],
-    'LIFESTYLE_SCORE': [2, 3, 1, 4, 2]
-})
+
 
 # ✅ Language Translations
 def get_translation(language):
@@ -257,14 +245,7 @@ elif page == "Prediction":
         st.pyplot(fig)
 
         # ✅ Toggle SHAP or Permutation
-        method = st.radio("Explanation Method",["SHAP","Permutation"])
-        if method=="SHAP":
-            explainer = shap.KernelExplainer(pipeline.predict_proba, sample_background)
-            shap_values = explainer.shap_values(row)
-            st.write("### SHAP Summary")
-            fig2, ax2 = plt.subplots(); shap.summary_plot(shap_values, row, plot_type="bar", show=False)
-            st.pyplot(fig2)
-        else:
+        
             perm = permutation_importance(pipeline,row,[pred],n_repeats=5,random_state=42)
             st.write("### Permutation Importance")
             fig3, ax3 = plt.subplots(); ax3.barh(feature_names, perm.importances_mean,color='teal')
