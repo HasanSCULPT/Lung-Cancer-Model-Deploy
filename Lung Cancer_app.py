@@ -81,7 +81,29 @@ set_png_as_page_bg("background.png")
 # ✅ Load Model & Features
 pipeline = joblib.load("lung_cancer_pipeline.pkl")
 feature_names = joblib.load("feature_names.pkl")
-
+# Sample background data (hardcoded or load from CSV in your repo)
+background_data = {
+    "AGE": [55, 62, 45, 50, 48, 67, 53, 60, 59, 52],
+    "GENDER": [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+    "SMOKING": [1, 1, 0, 0, 1, 0, 1, 0, 1, 0],
+    "YELLOW_FINGERS": [1, 0, 1, 0, 1, 1, 0, 0, 1, 1],
+    "ANXIETY": [0, 1, 0, 1, 1, 0, 1, 0, 1, 1],
+    "PEER_PRESSURE": [0, 0, 1, 1, 0, 1, 0, 1, 0, 1],
+    "CHRONIC DISEASE": [1, 1, 0, 0, 1, 0, 1, 0, 1, 0],
+    "FATIGUE": [1, 0, 1, 1, 0, 1, 0, 1, 0, 1],
+    "ALLERGY": [0, 1, 1, 0, 1, 1, 0, 0, 1, 0],
+    "WHEEZING": [1, 0, 0, 1, 1, 0, 1, 1, 0, 0],
+    "ALCOHOL CONSUMING": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+    "COUGHING": [1, 1, 1, 0, 0, 1, 0, 0, 1, 0],
+    "SHORTNESS OF BREATH": [1, 1, 0, 0, 1, 0, 1, 1, 0, 0],
+    "SWALLOWING DIFFICULTY": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+    "CHEST PAIN": [1, 0, 1, 1, 0, 1, 0, 1, 0, 1]
+}
+X_background = pd.DataFrame(background_data)
+y_background = np.random.randint(0, 2, size=len(X_background))  # Dummy labels for scoring
+# Compute permutation importance on background sample
+result = permutation_importance(pipeline, X_background, y_background,
+                                scoring='accuracy', n_repeats=10, random_state=42)
 
 
 # ✅ Language Translations
