@@ -94,6 +94,8 @@ page = st.sidebar.radio("Navigate", ["Prediction", "About", "Contact", "Terms"])
 
 # ----------------------------
 # ✅ About & Contact Pages
+# Email input
+# Email sender (placeholder)
 # ----------------------------
 email = st.text_input(tr['enter_email'], key="email")
 if email and st.button(tr['send_email'], key="email_btn"):
@@ -102,6 +104,7 @@ if email and st.button(tr['send_email'], key="email_btn"):
         st.success(tr['email_success'])
     else:
         st.error(tr['email_fail'])
+        
 def send_email(recipient_email, subject, body, attachment_path):
     try:
         msg = EmailMessage()
@@ -136,6 +139,7 @@ if page == "About":
 elif page == "Contact":
     st.header("📧 Contact")
     st.write("Email: support@lungdiagnosis.ai")
+    st.write("Phone: +234-000-0000")
 elif page == "Terms":
     st.header("📜 Terms")
     st.write("Disclaimer: This tool is for educational and diagnostic support only. Not an absolute substitute for professional medical advice.")
