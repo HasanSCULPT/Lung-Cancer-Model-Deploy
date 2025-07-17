@@ -214,15 +214,7 @@ elif page == "Prediction":
         st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
         if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold)
  
-        # Probability Distribution Plot
-        st.write("### 🔍 Prediction Probability Distribution")
-        fig, ax = plt.subplots()
-        ax.hist(proba, bins=10, edgecolor='k')
-        ax.axvline(threshold, color='red', linestyle='--')
-        ax.set_xlabel("Predicted Probability")
-        ax.set_ylabel("Frequency")
-        st.pyplot(fig)
-  
+       
 
         
         # ✅ Predictions
@@ -234,11 +226,17 @@ elif page == "Prediction":
 
     # Histogram
         
+        
+
+     # Probability Distribution Plot
+        st.write("### 🔍 Prediction Probability Distribution")
         fig, ax = plt.subplots()
-        ax.hist(proba_temp, bins=10, edgecolor='k')
+        ax.hist(proba, bins=10, edgecolor='k')
         ax.axvline(threshold, color='red', linestyle='--')
-        ax.set_title("Prediction Probability Distribution")
+        ax.set_xlabel("Predicted Probability")
+        ax.set_ylabel("Frequency")
         st.pyplot(fig)
+  
 
     # ✅ Individual Prediction
     st.write("---"); st.write(f"### {tr['individual_entry']}")
