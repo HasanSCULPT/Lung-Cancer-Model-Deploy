@@ -262,5 +262,6 @@ elif page == "Prediction":
         pdf.cell(200,10,txt="Lung Cancer Prediction Result",ln=True,align='C')
         pdf.cell(200,10,txt=f"Prediction: {'LUNG CANCER' if pred else 'NO LUNG CANCER'}",ln=True)
         pdf.cell(200,10,txt=f"Probability: {prob:.2f}",ln=True)
-        pdf_buffer = io.BytesIO(); pdf.output(pdf_buffer); pdf_buffer.seek(0)
-        st.download_button(label="📥 Download PDF",data=pdf_buffer,file_name="prediction_result.pdf",mime="application/pdf")
+        pdf_bytes = pdf.output(dest='S').encode('latin-1')
+        st.download_button(label="📥 Download PDF", data=pdf_bytes, file_name="prediction_result.pdf", mime="application/pdf")
+
