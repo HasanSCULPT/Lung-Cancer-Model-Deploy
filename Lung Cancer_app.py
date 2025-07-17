@@ -153,7 +153,7 @@ if page == "Prediction":
                     df_input[col].fillna(df_input[col].mean(), inplace=True)
                 else:
                     df_input[col].fillna(df_input[col].mode()[0], inplace=True)
-
+# Align features
         df_input = pd.get_dummies(df_input, drop_first=True)
         for col in feature_names:
             if col not in df_input:
@@ -187,12 +187,24 @@ if page == "Prediction":
         st.write("### Prediction Results")
         st.dataframe(df_output)
         st.download_button("📥 Download CSV", df_output.to_csv(index=False), "batch_predictions.csv","text/csv")
-
+        # Histogram
         fig, ax = plt.subplots()
         ax.hist(proba, bins=10, edgecolor='k')
         ax.axvline(threshold, color='red', linestyle='--')
         st.pyplot(fig)
+         # ✅ Precomputed Permutation Importance
+        importance_data = {
+        "Feature": ["SYMPTOM_SCORE", "LIFESTYLE_SCORE", "SHORTNESS OF BREATH", "SWALLOWING DIFFICULTY", "YELLOW_FINGERS"],
+        "Importance": [0.0629, 0.0371, 0.0274, 0.0258, 0.0081]
+        }
+    importance_df = pd.DataFrame(importance_data)
+    fig3, ax3 = plt.subplots(figsize=(6, 4))
+    ax3.barh(importance_df["Feature"], importance_df["Importance"], color='teal')
+    st.pyplot(fig3)
 
+# =====================================
+# Individual Prediction
+# =====================================
     st.write("---")
     st.write("### Individual Prediction")
     age = st.number_input("Age",0,100,50)
@@ -227,7 +239,7 @@ if page == "Prediction":
         prob = pipeline.predict_proba(row)[0][1]
         pred = int(prob > threshold)
         st.success(f"{'🛑 LUNG CANCER' if pred else '✅ NO LUNG CANCER'} (Probability: {prob:.2f})")
-
+       # Confidence Bar Chart
         fig, ax = plt.subplots()
         ax.bar(["No Lung Cancer","Lung Cancer"],[1-prob, prob],color=["green","red"])
         ax.set_ylim(0,1)
