@@ -208,7 +208,12 @@ elif page == "Prediction":
         df_input = df_input[feature_names]
         
 
-        #Automatic Threshold Suggestion
+        # ✅ Automatic Threshold Suggestion
+        proba_temp = pipeline.predict_proba(df_input)[:,1]
+        fpr, tpr, thresholds = roc_curve((proba_temp>0.5).astype(int), proba_temp)
+        youden_j = tpr - fpr; optimal_threshold = thresholds[np.argmax(youden_j)]
+        st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
+        if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold)
         # 
         #✅ Prediction
         proba = pipeline.predict_proba(df_input)[:, 1]
