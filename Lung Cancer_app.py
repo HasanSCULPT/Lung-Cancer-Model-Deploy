@@ -211,6 +211,12 @@ elif page == "Prediction":
         youden_j = tpr - fpr; best_idx = np.argmax(youden_j); optimal_threshold = thresholds[best_idx]
         st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
         if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold); st.success(f"✅ Threshold updated to {threshold:.2f}")
+         
+        # Probability Distribution Plot
+        fig, ax = plt.subplots()
+        ax.hist(proba, bins=10, edgecolor='k'); ax.axvline(threshold, color='red', linestyle='--')
+        ax.set_xlabel("Predicted Probability"); ax.set_ylabel("Frequency")
+        st.pyplot(fig)   
   
 
         
