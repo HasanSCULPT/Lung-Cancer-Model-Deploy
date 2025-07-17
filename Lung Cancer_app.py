@@ -134,7 +134,7 @@ elif page == "Terms":
     st.write("Disclaimer: This tool is for educational and diagnostic support only. Not an absolute substitute for professional medical advice.")
 else:
     # Prediction Page
-    st.header("🩺 Lung Cancer Prediction")
+    st.header("Welcom To The Lung Cancer Diagnostics Centre")
 
 # ----------------------------
 # ✅ Prediction Page
