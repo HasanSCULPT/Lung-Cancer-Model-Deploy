@@ -425,10 +425,30 @@ elif page == "Prediction":
                 ax2.barh(np.array(expected_features)[sorted_idx], result.importances_mean[sorted_idx])
                 st.pyplot(fig2)
             except:
+                
                 st.warning("Live calculation failed. Showing static importance chart.")
                 fig3, ax3 = plt.subplots()
                 ax3.barh(importance_data["Feature"], importance_data["Importance"])
-        
+                st.pyplot(fig3)
+
+
+        # ✅ Static Permutation Plot
+        fig, ax = plt.subplots()
+        ax.barh(importance_data["Feature"], importance_data["Importance"])
+        ax.set_title("Feature Importance (Static)")
+        st.pyplot(fig)
+
+        # ✅ Optional Live Calculation
+        if st.checkbox("Show Live Permutation Importance"):
+            try:
+                result = permutation_importance(pipeline, X_background, [0,1,0,1], scoring='accuracy', n_repeats=5, random_state=42)
+                sorted_idx = result.importances_mean.argsort()
+                fig2, ax2 = plt.subplots()
+                ax2.barh(np.array(expected_features)[sorted_idx], result.importances_mean[sorted_idx])
+                ax2.set_title("Live Permutation Importance")
+                st.pyplot(fig2)
+            except Exception as e:
+                st.error(f"Failed: {str(e)}")
         
 
         # ✅ Export PDF
