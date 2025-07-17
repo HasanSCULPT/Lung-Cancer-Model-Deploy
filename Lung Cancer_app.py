@@ -114,8 +114,11 @@ def send_email(recipient_email, subject, body, attachment_path):
         return True
     except Exception:
         return False
-
+# -----------------------------
+# Pages
+# -----------------------------
 if page == "About":
+    st.header("📘 About Us")
     st.write("""This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptomatic analytics and lifestyle.
     This Diagnostic application allows for Individual Prediction + Batch CSV upload with validation & cleaning, Confidence chart for individual predictions, Toggle for SHAP or 
     Permutation Importance for individual prediction. 
@@ -124,9 +127,14 @@ if page == "About":
     measures if taken would further enhance a more accurate predictions.""")
     
 elif page == "Contact":
+    st.header("📧 Contact")
     st.write("Email: support@lungdiagnosis.ai")
 elif page == "Terms":
+    st.header("📜 Terms")
     st.write("Disclaimer: This tool is for educational and diagnostic support only. Not an absolute substitute for professional medical advice.")
+else:
+    # Prediction Page
+    st.header("🩺 Lung Cancer Prediction")
 
 # ----------------------------
 # ✅ Prediction Page
