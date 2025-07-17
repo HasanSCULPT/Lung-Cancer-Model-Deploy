@@ -109,7 +109,7 @@ X_background = pd.DataFrame(background_data)
 y_background = np.random.randint(0, 2, size=len(X_background))  # Dummy labels for scoring
 # Compute permutation importance on background sample
 result = permutation_importance(pipeline, X_background, y_background,
-                                scoring='accuracy', n_repeats=10, random_state=42)
+scoring='accuracy', n_repeats=10, random_state=42)
 
 # Plot
 sorted_idx = result.importances_mean.argsort()
