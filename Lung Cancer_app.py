@@ -229,13 +229,7 @@ elif page == "Prediction":
         
 
      # Probability Distribution Plot
-        st.write("### 🔍 Prediction Probability Distribution")
-        fig, ax = plt.subplots()
-        ax.hist(proba, bins=10, edgecolor='k')
-        ax.axvline(threshold, color='red', linestyle='--')
-        ax.set_xlabel("Predicted Probability")
-        ax.set_ylabel("Frequency")
-        st.pyplot(fig)
+        
   
 
     # ✅ Individual Prediction
