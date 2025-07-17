@@ -105,6 +105,10 @@ y_background = np.random.randint(0, 2, size=len(X_background))  # Dummy labels f
 result = permutation_importance(pipeline, X_background, y_background,
                                 scoring='accuracy', n_repeats=10, random_state=42)
 
+perm = permutation_importance(pipeline,row,[pred],n_repeats=5,random_state=42)
+st.write("### Permutation Importance")
+fig3, ax3 = plt.subplots(); ax3.barh(feature_names, perm.importances_mean,color='teal')
+ax3.set_title("Permutation Importance"); st.pyplot(fig3)
 
 # ✅ Language Translations
 def get_translation(language):
@@ -349,10 +353,7 @@ elif page == "Prediction":
         fig, ax = plt.subplots()
         ax.hist(proba, bins=10, edgecolor='k')
         ax.axvline(threshold, color='red', linestyle='--')
-        st.pyplot(fig)
-
-    # Histogram
-        
+        st.pyplot(fig)   
         
 
      # Probability Distribution Plot
@@ -387,10 +388,7 @@ elif page == "Prediction":
 
         # ✅ Toggle SHAP or Permutation
         
-        perm = permutation_importance(pipeline,row,[pred],n_repeats=5,random_state=42)
-        st.write("### Permutation Importance")
-        fig3, ax3 = plt.subplots(); ax3.barh(feature_names, perm.importances_mean,color='teal')
-        ax3.set_title("Permutation Importance"); st.pyplot(fig3)
+        
 
         # ✅ Export PDF
         pdf = FPDF(); pdf.add_page(); pdf.set_font("Arial",size=12)
