@@ -82,28 +82,31 @@ set_png_as_page_bg("background.png")
 pipeline = joblib.load("lung_cancer_pipeline.pkl")
 feature_names = joblib.load("feature_names.pkl")
 # Sample background data (hardcoded or load from CSV in your repo)
-background_data = {
-    'GENDER': [1, 0],
-    'AGE': [65, 45],
-    'SMOKING': [2, 1],
-    'YELLOW_FINGERS': [1, 0],
-    'ANXIETY': [2, 1],
-    'PEER_PRESSURE': [1, 0],
-    'CHRONIC DISEASE': [1, 0],
-    'FATIGUE': [2, 1],
-    'ALLERGY': [1, 0],
-    'WHEEZING': [2, 1],
-    'ALCOHOL CONSUMING': [1, 0],
-    'COUGHING': [2, 1],
-    'SHORTNESS OF BREATH': [2, 1],
-    'SWALLOWING DIFFICULTY': [1, 0],
-    'CHEST PAIN': [2, 1],
-    'SYMPTOM_SCORE': [8, 4],
-    'LIFESTYLE_SCORE': [6, 3],
-    'LIFESTYLE_RISK': [2, 1],
-    'AGE_GROUP_Middle-aged': [0, 1],
-    'AGE_GROUP_Senior': [1, 0]
+# ✅ Expected Features
+expected_features = [
+    "AGE", "GENDER", "SMOKING", "YELLOW_FINGERS", "ANXIETY", "PEER_PRESSURE",
+    "CHRONIC DISEASE", "FATIGUE", "ALLERGY", "WHEEZING", "ALCOHOL CONSUMING",
+    "COUGHING", "SHORTNESS OF BREATH", "SWALLOWING DIFFICULTY", "CHEST PAIN",
+    "SYMPTOM_SCORE", "LIFESTYLE_SCORE", "LIFESTYLE_RISK", "AGE_GROUP_Senior", "AGE_GROUP_Middle-aged"
+]
+
+# ✅ Static Precomputed Permutation Importance
+importance_data = {
+    "Feature": [
+        "SYMPTOM_SCORE", "LIFESTYLE_SCORE", "SHORTNESS OF BREATH",
+        "SWALLOWING DIFFICULTY", "ALCOHOL CONSUMING", "ANXIETY",
+        "COUGHING", "WHEEZING", "SMOKING", "GENDER", "AGE_GROUP_Senior",
+        "AGE", "YELLOW_FINGERS", "PEER_PRESSURE", "CHEST PAIN",
+        "LIFESTYLE_RISK", "ALLERGY", "FATIGUE", "AGE_GROUP_Middle-aged", "CHRONIC DISEASE"
+    ],
+    "Importance": [
+        6.29e-02, 3.70e-02, 2.74e-02, 2.58e-02, 2.41e-02,
+        2.41e-02, 2.09e-02, 1.93e-02, 1.93e-02, 1.12e-02,
+        9.67e-03, 9.67e-03, 8.06e-03, 8.06e-03, 4.83e-03,
+        1.61e-03, 0.0, 0.0, 0.0, 0.0
+    ]
 }
+
 X_background = pd.DataFrame(background_data)
 # Get feature names the pipeline expects
 expected_features = pipeline.feature_names_in_
@@ -400,7 +403,18 @@ elif page == "Prediction":
         for bar in bars: yval=bar.get_height(); ax.text(bar.get_x()+bar.get_width()/2.0,yval+0.02,f"{yval:.2f}",ha='center')
         st.pyplot(fig)
 
-        # ✅ Toggle SHAP or Permutation
+        # ✅ Permutation Importance Toggle
+        if st.checkbox("Show Permutation Importance"):
+            try:
+                result = permutation_importance(pipeline, df_input, [pred], n_repeats=5, random_state=42)
+                sorted_idx = result.importances_mean.argsort()[::-1]
+                fig2, ax2 = plt.subplots()
+                ax2.barh(np.array(expected_features)[sorted_idx], result.importances_mean[sorted_idx])
+                st.pyplot(fig2)
+            except:
+                st.warning("Live calculation failed. Showing static importance chart.")
+                fig3, ax3 = plt.subplots()
+                ax3.barh(importance_data["Feature"], importance_data["Importance"])
         
         
 
