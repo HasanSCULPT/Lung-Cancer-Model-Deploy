@@ -137,7 +137,7 @@ importance_data = {
 expected_features = pipeline.feature_names_in_
 
 # Align columns in background data
-X_background = X_background.reindex(columns=expected_features, fill_value=0)
+
 
 X_background = pd.DataFrame(background_data)
 y_background = np.random.randint(0, 2, size=len(X_background))  # Dummy labels for scoring
