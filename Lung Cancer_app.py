@@ -207,11 +207,13 @@ elif page == "Prediction":
 
         #Automatic Threshold Suggestion
         # ✅ Optimal Threshold Suggestion
-        fpr, tpr, thresholds = roc_curve((proba > 0.5).astype(int), proba)
-        youden_j = tpr - fpr; best_idx = np.argmax(youden_j); optimal_threshold = thresholds[best_idx]
+        
+        proba_temp = pipeline.predict_proba(df_input)[:,1]
+        fpr, tpr, thresholds = roc_curve((proba_temp>0.5).astype(int), proba_temp)
+        youden_j = tpr - fpr; optimal_threshold = thresholds[np.argmax(youden_j)]
         st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
-        if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold); st.success(f"✅ Threshold updated to {threshold:.2f}")
-         
+        if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold)
+ 
         # Probability Distribution Plot
         fig, ax = plt.subplots()
         ax.hist(proba, bins=10, edgecolor='k'); ax.axvline(threshold, color='red', linestyle='--')
