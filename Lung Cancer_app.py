@@ -238,8 +238,6 @@ if page == "Prediction":
         st.pyplot(fig)
 
         
-        
-        
         st.write("### Permutation Importance")
         result = permutation_importance(pipeline,row,[pred],n_repeats=5,random_state=42)
         importance_df = pd.DataFrame({"Feature":feature_names,"Importance":result.importances_mean})
