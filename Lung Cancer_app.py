@@ -97,14 +97,7 @@ page = st.sidebar.radio("Navigate", ["Prediction", "About", "Contact", "Terms"])
 # Email input
 # Email sender (placeholder)
 # ----------------------------
-email = st.text_input(tr['enter_email'], key="email")
-if email and st.button(tr['send_email'], key="email_btn"):
-    success = send_email(email, tr['title'], "See attached result.", "prediction_result.pdf")
-    if success:
-        st.success(tr['email_success'])
-    else:
-        st.error(tr['email_fail'])
-        
+
 def send_email(recipient_email, subject, body, attachment_path):
     try:
         msg = EmailMessage()
