@@ -28,10 +28,6 @@ from sklearn.metrics import roc_curve
 from sklearn.metrics import recall_score
 from sklearn.inspection import permutation_importance
 
-# =======================================
-# Lung Cancer Diagnostics App
-# =======================================
-
 # =========================================================
 # ✅ Lung Cancer Diagnostic App (Streamlit)
 # By HasanSCULPT | DSA 2025
@@ -46,23 +42,9 @@ from sklearn.inspection import permutation_importance
 #    ✅ Confidence bar chart
 #    ✅ Download results as CSV & PDF
 #    ✅ Email sending (placeholders included)
-#    ✅ Sample data embedded for SHAP background
 #    ✅ Background image & logo supported
 # =========================================================
 
-import streamlit as st
-import pandas as pd
-import numpy as np
-import shap
-import joblib
-import base64
-import io
-import matplotlib.pyplot as plt
-from fpdf import FPDF
-from sklearn.metrics import recall_score, roc_curve
-from sklearn.inspection import permutation_importance
-from email.message import EmailMessage
-import smtplib
 
 # ----------------------------
 # ✅ Streamlit Configuration
@@ -218,7 +200,8 @@ elif page == "Prediction":
                 if df_input[col].dtype in ['int64','float64']:
                     df_input[col].fillna(df_input[col].mean(), inplace=True)
                 else:
-                    df_input[col].fillna(df_input[col].mode()[0], inplace=True)
+                    df_input[col].fillna(df_input[col].mode()[0], inplace=True)   
+        # Align features
         df_input = pd.get_dummies(df_input, drop_first=True)
         for col in feature_names:
             if col not in df_input: df_input[col] = 0
@@ -226,23 +209,24 @@ elif page == "Prediction":
         
 
         #Automatic Threshold Suggestion
-        # ✅ Optimal Threshold Suggestion
-        
-        proba_temp = pipeline.predict_proba(df_input)[:,1]
-        fpr, tpr, thresholds = roc_curve((proba_temp>0.5).astype(int), proba_temp)
-        youden_j = tpr - fpr; optimal_threshold = thresholds[np.argmax(youden_j)]
-        st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
-        if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold)
- 
-       
+        # 
+        #✅ Prediction
+        proba = pipeline.predict_proba(df_input)[:, 1]
+        prediction = (proba > threshold).astype(int)
 
-        
-        # ✅ Predictions
-        probs = pipeline.predict_proba(df_input)[:,1]
-        preds = (probs > threshold).astype(int)
-        df_output = df_input.copy(); df_output["Probability"] = probs; df_output["Prediction"] = preds
-        st.write(f"### {tr['prediction_results']}"); st.dataframe(df_output[["Probability","Prediction"]])
-        st.download_button("📥 " + tr['download_csv'], df_output.to_csv(index=False), "batch_predictions.csv","text/csv")
+        df_output = df_input.copy()
+        df_output["Probability"] = proba
+        df_output["Prediction"] = prediction
+
+        st.write(f"### {tr['prediction_results']}")
+        st.dataframe(df_output[["Probability", "Prediction"]])
+        st.download_button("📥 " + tr['download_csv'], df_output.to_csv(index=False), "batch_predictions.csv", "text/csv")
+
+        # Histogram
+        fig, ax = plt.subplots()
+        ax.hist(proba, bins=10, edgecolor='k')
+        ax.axvline(threshold, color='red', linestyle='--')
+        st.pyplot(fig)
 
     # Histogram
         
