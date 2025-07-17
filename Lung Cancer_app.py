@@ -105,11 +105,13 @@ y_background = np.random.randint(0, 2, size=len(X_background))  # Dummy labels f
 result = permutation_importance(pipeline, X_background, y_background,
                                 scoring='accuracy', n_repeats=10, random_state=42)
 
-perm = permutation_importance(pipeline,row,[pred],n_repeats=5,random_state=42)
-st.write("### Permutation Importance")
-fig3, ax3 = plt.subplots(); ax3.barh(feature_names, perm.importances_mean,color='teal')
-ax3.set_title("Permutation Importance"); st.pyplot(fig3)
-
+# Plot
+sorted_idx = result.importances_mean.argsort()
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.barh(X_background.columns[sorted_idx], result.importances_mean[sorted_idx])
+ax.set_title("Permutation Importance (Based on Sample)")
+plt.tight_layout()
+st.pyplot(fig)
 # ✅ Language Translations
 def get_translation(language):
     translations = {
