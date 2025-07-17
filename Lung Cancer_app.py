@@ -83,22 +83,28 @@ pipeline = joblib.load("lung_cancer_pipeline.pkl")
 feature_names = joblib.load("feature_names.pkl")
 # Sample background data (hardcoded or load from CSV in your repo)
 background_data = {
-    "AGE": [55, 62, 45, 50, 48, 67, 53, 60, 59, 52],
-    "GENDER": [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
-    "SMOKING": [1, 1, 0, 0, 1, 0, 1, 0, 1, 0],
-    "YELLOW_FINGERS": [1, 0, 1, 0, 1, 1, 0, 0, 1, 1],
-    "ANXIETY": [0, 1, 0, 1, 1, 0, 1, 0, 1, 1],
-    "PEER_PRESSURE": [0, 0, 1, 1, 0, 1, 0, 1, 0, 1],
-    "CHRONIC DISEASE": [1, 1, 0, 0, 1, 0, 1, 0, 1, 0],
-    "FATIGUE": [1, 0, 1, 1, 0, 1, 0, 1, 0, 1],
-    "ALLERGY": [0, 1, 1, 0, 1, 1, 0, 0, 1, 0],
-    "WHEEZING": [1, 0, 0, 1, 1, 0, 1, 1, 0, 0],
-    "ALCOHOL CONSUMING": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-    "COUGHING": [1, 1, 1, 0, 0, 1, 0, 0, 1, 0],
-    "SHORTNESS OF BREATH": [1, 1, 0, 0, 1, 0, 1, 1, 0, 0],
-    "SWALLOWING DIFFICULTY": [0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-    "CHEST PAIN": [1, 0, 1, 1, 0, 1, 0, 1, 0, 1]
+    'GENDER': [1, 0],
+    'AGE': [65, 45],
+    'SMOKING': [2, 1],
+    'YELLOW_FINGERS': [1, 0],
+    'ANXIETY': [2, 1],
+    'PEER_PRESSURE': [1, 0],
+    'CHRONIC DISEASE': [1, 0],
+    'FATIGUE': [2, 1],
+    'ALLERGY': [1, 0],
+    'WHEEZING': [2, 1],
+    'ALCOHOL CONSUMING': [1, 0],
+    'COUGHING': [2, 1],
+    'SHORTNESS OF BREATH': [2, 1],
+    'SWALLOWING DIFFICULTY': [1, 0],
+    'CHEST PAIN': [2, 1],
+    'SYMPTOM_SCORE': [8, 4],
+    'LIFESTYLE_SCORE': [6, 3],
+    'LIFESTYLE_RISK': [2, 1],
+    'AGE_GROUP_Middle-aged': [0, 1],
+    'AGE_GROUP_Senior': [1, 0]
 }
+X_background = pd.DataFrame(background_data)
 # Get feature names the pipeline expects
 expected_features = pipeline.feature_names_in_
 
