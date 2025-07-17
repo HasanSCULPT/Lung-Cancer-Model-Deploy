@@ -86,7 +86,8 @@ feature_names = joblib.load("feature_names.pkl")
 
 # ✅ Language Translations
 def get_translation(language):
-    "en": {
+    translations = {
+        "en": {
             "title": "Lung Cancer Diagnostics Centre",
             "subtitle": "By HasanSCULPT | DSA 2025",
             "upload_csv": "Upload your CSV data",
@@ -101,17 +102,20 @@ def get_translation(language):
             "email_fail": "❌ Failed to send email. Check configuration.",
             "language_select": "🌍 Select Language",
             "sidebar_title": "Navigate",
-            "individual_entry": " Please enter your medical/patient information below to predict whether you're likely to have Lung Cancer or not.",
+            "individual_entry": "Please enter your medical/patient information below to predict whether you're likely to have Lung Cancer or not.",
             "about_title": "📘 About Us",
             "about_desc": """This app is developed by HasanSCULPT to assist in preliminary lung cancer risk prediction using ensemble machine learning based on symptomatic analytics and lifestyle.
-    This Diagnostic application allows for Individual Prediction + Batch CSV upload with validation & cleaning, Confidence chart for individual predictions, Toggle for SHAP or 
-    Permutation Importance for individual prediction. 
-    It should be noted also that in order to accurately execute raw batch predictions, datasets must be properly cleaned, features correctly encoded, because the model utilizes this 
-    numeric idetifiers 1 and 0, meaning 1 equalsLung cancer while 0 equals No Lung cancer. Gender should also utilize numeric identifiers instead of MALE or FEMALE identifiers, these 
-    measures if taken would further enhance a more accurate predictions.""",
+            
+This Diagnostic application allows for:
+- Individual Prediction + Batch CSV upload with validation & cleaning
+- Confidence chart for individual predictions
+- Toggle for SHAP or Permutation Importance
+
+Important: For accurate batch predictions, datasets must be cleaned and features properly encoded (1 = Lung Cancer, 0 = No Lung Cancer). Gender should also use numeric identifiers instead of text."""
+            ,
             "contact_title": "📧 Contact Us",
             "terms_title": "📜 Terms & Conditions",
-            "terms_text": """Disclaimer: It should be noted that, this tool is for educational and diagnostic support only. Not an absolute substitute for a certified professional medical advice."""
+            "terms_text": "Disclaimer: This tool is for educational and diagnostic support only. Not a substitute for professional medical advice."
         },
         "fr": {
             "title": "Centre de Diagnostic du Cancer du Poumon",
@@ -128,16 +132,13 @@ def get_translation(language):
             "email_fail": "❌ Échec de l'envoi de l'e-mail.",
             "language_select": "🌍 Sélectionnez la langue",
             "sidebar_title": "Navigation",
-            "individual_entry": "Ou entrez les informations individuelles du patient",
+            "individual_entry": "Veuillez entrer les informations médicales du patient ci-dessous pour prédire la probabilité d'un cancer du poumon.",
             "about_title": "📘 À propos de nous",
-            "about_desc": """Cette application, développée par HasanSCULPT, facilite la prédiction préliminaire du risque de cancer du poumon grâce à l'apprentissage automatique d'ensemble, basé sur l'analyse des symptômes et le mode de vie.
-
-Cette application de diagnostic permet la prédiction individuelle et le téléchargement par lots de fichiers CSV avec validation et nettoyage, ainsi qu'un graphique de confiance pour les prédictions individuelles. Elle permet également de basculer entre SHAP et l'importance des permutations pour les prédictions individuelles.
-
-Il convient également de noter que pour exécuter avec précision des prédictions brutes par lots, les ensembles de données doivent être correctement nettoyés et les caractéristiques correctement codées, car le modèle utilise les identifiants numériques 1 et 0, ce qui signifie que 1 correspond à un cancer du poumon et 0 à l'absence de cancer du poumon. Le sexe doit également utiliser des identifiants numériques plutôt que les identifiants HOMME ou FÉMININ. Ces mesures, si elles sont prises, amélioreraient encore la précision des prédictions.""",
+            "about_desc": """Cette application, développée par HasanSCULPT, facilite la prédiction préliminaire du risque de cancer du poumon grâce à l'apprentissage automatique d'ensemble, basé sur l'analyse des symptômes et le mode de vie."""
+            ,
             "contact_title": "📧 Contactez-nous",
             "terms_title": "📜 Conditions générales",
-            "terms_text": """Avertissement : Cet outil est uniquement destiné à des fins éducatives et diagnostiques. Il ne remplace pas un avis médical professionnel certifié."""
+            "terms_text": "Avertissement : Cet outil est uniquement destiné à des fins éducatives et diagnostiques. Il ne remplace pas un avis médical professionnel certifié."
         },
         "ru": {
             "title": "Центр Диагностики Рака Легких",
@@ -154,20 +155,12 @@ Il convient également de noter que pour exécuter avec précision des prédicti
             "email_fail": "❌ Не удалось отправить Email.",
             "language_select": "🌍 Выберите язык",
             "sidebar_title": "Навигация",
-            "individual_entry": "Или введите информацию о пациенте",
+            "individual_entry": "Введите информацию о пациенте ниже для прогноза риска рака легких.",
             "about_title": "📘 О нас",
-            "about_desc": """Это приложение разработано компанией HasanSCULPT для предварительного прогнозирования риска рака лёгких с использованием ансамблевого машинного обучения на основе симптоматической аналитики и образа жизни.
-Это диагностическое приложение позволяет выполнять индивидуальные прогнозы + пакетную загрузку CSV-файлов с проверкой и очисткой, использовать диаграмму достоверности для индивидуальных прогнозов, переключаться на SHAP или
-
-перестановку важности для индивидуального прогноза.
-Следует также отметить, что для точного выполнения первичных пакетных прогнозов наборы данных должны быть правильно очищены, а признаки должны быть правильно закодированы, поскольку модель использует
-числовые идентификаторы 1 и 0, то есть 1 означает наличие рака лёгких, а 0 — отсутствие рака лёгких. Для определения пола также следует использовать числовые идентификаторы вместо идентификаторов МУЖСКОЙ или ЖЕНСКИЙ. Эти
-
-меры, принятые для повышения точности прогнозов.""",
-,
+            "about_desc": "Это приложение разработано компанией HasanSCULPT для прогнозирования риска рака легких.",
             "contact_title": "📧 Связаться с нами",
             "terms_title": "📜 Условия использования",
-            "terms_text": """Отказ от ответственности: следует отметить, что данный инструмент предназначен исключительно для образовательных и диагностических целей. Он не является абсолютной заменой консультации сертифицированного специалиста-врача."""
+            "terms_text": "Отказ от ответственности: данный инструмент предназначен исключительно для образовательных и диагностических целей."
         },
         "ar": {
             "title": "مركز تشخيص سرطان الرئة",
@@ -184,15 +177,12 @@ Il convient également de noter que pour exécuter avec précision des prédicti
             "email_fail": "❌ فشل في إرسال البريد الإلكتروني.",
             "language_select": "🌍 اختر اللغة",
             "sidebar_title": "القائمة الجانبية",
-            "individual_entry": """أدخل معلومات المريض الفردية",
+            "individual_entry": "يرجى إدخال بياناتك الطبية أدناه للتنبؤ بخطر الإصابة بسرطان الرئة.",
             "about_title": "📘 معلومات عنا",
-            "about_desc": "هذه الأداة لأغراض تعليمية فقط ولا تعتبر بديلاً عن الاستشارة الطبية المهنية.",
-
-
- 
+            "about_desc": "تم تطوير هذا التطبيق للمساعدة في التنبؤ بمخاطر الإصابة بسرطان الرئة باستخدام التعلم الآلي.",
             "contact_title": "📧 تواصل معنا",
             "terms_title": "📜 الشروط والأحكام",
-            "terms_text": """إخلاء مسؤولية: تجدر الإشارة إلى أن هذه الأداة مخصصة للدعم التعليمي والتشخيصي فقط. وليست بديلاً مطلقًا عن استشارة طبية مهنية معتمدة."""
+            "terms_text": "إخلاء مسؤولية: هذه الأداة مخصصة للأغراض التعليمية والدعم التشخيصي فقط."
         },
         "uk": {
             "title": "Центр Діагностики Раку Легенів",
@@ -209,20 +199,16 @@ Il convient également de noter que pour exécuter avec précision des prédicti
             "email_fail": "❌ Не вдалося надіслати Email.",
             "language_select": "🌍 Виберіть мову",
             "sidebar_title": "Навігація",
-            "individual_entry": "Або введіть інформацію про пацієнта",
+            "individual_entry": "Введіть дані пацієнта для прогнозу ризику раку легень.",
             "about_title": "📘 Про нас",
-            "about_desc": """Цей додаток розроблено HasanSCULPT для допомоги у попередньому прогнозуванні ризику раку легень за допомогою ансамбльового машинного навчання на основі симптоматичної аналітики та способу життя.
-
-Цей діагностичний додаток дозволяє виконувати індивідуальне прогнозування + пакетне завантаження CSV з перевіркою та очищенням, діаграму достовірності для індивідуальних прогнозів, перемикання для SHAP або 
-
-важливість перестановок для індивідуального прогнозу. Слід також зазначити, що для точного виконання пакетних прогнозів необроблених даних набори даних повинні бути належним чином очищені, а ознаки правильно закодовані, оскільки модель використовує ці числові ідентифікатори 1 та 0, тобто 1 дорівнює раку легень, а 0 дорівнює відсутності раку легень. Стать також повинна використовувати числові ідентифікатори замість ідентифікаторів ЧОЛОВІК або ЖІНКА, ці заходи, якщо їх вжити, ще більше підвищать точність прогнозів.
-""",
+            "about_desc": "Цей додаток допомагає прогнозувати ризик раку легень за допомогою ансамблевого машинного навчання.",
             "contact_title": "📧 Зв'язатися з нами",
             "terms_title": "📜 Умови використання",
-            "terms_text": """Застереження: Слід зазначити, що цей інструмент призначений лише для освітньої та діагностичної підтримки. Не є повною заміною консультації сертифікованого професійного медичного працівника."""
+            "terms_text": "Цей інструмент призначений лише для освітньої та діагностичної підтримки."
         }
     }
     return translations.get(language, translations["en"])
+
 
 # 🌐 Language Selector
 LANG_OPTIONS = {
