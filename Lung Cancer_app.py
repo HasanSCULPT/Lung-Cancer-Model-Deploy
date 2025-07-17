@@ -349,7 +349,7 @@ elif page == "Prediction":
         
 
         # ✅ Automatic Threshold Suggestion
-       if st.checkbox("Show Live Permutation Importance"):
+        if st.checkbox("Show Live Permutation Importance"):
     try:
         result = permutation_importance(pipeline, X_background, [0, 1, 0, 1], scoring='accuracy', n_repeats=5, random_state=42)
         sorted_idx = result.importances_mean.argsort()
@@ -362,6 +362,7 @@ elif page == "Prediction":
         fig, ax = plt.subplots(figsize=(8, 6))
         ax.barh(importance_data["Feature"], importance_data["Importance"])
         st.pyplot(fig)
+           
 
          
         #✅ Prediction
