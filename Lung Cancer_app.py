@@ -215,10 +215,13 @@ elif page == "Prediction":
         if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold)
  
         # Probability Distribution Plot
+        st.write("### 🔍 Prediction Probability Distribution")
         fig, ax = plt.subplots()
-        ax.hist(proba, bins=10, edgecolor='k'); ax.axvline(threshold, color='red', linestyle='--')
-        ax.set_xlabel("Predicted Probability"); ax.set_ylabel("Frequency")
-        st.pyplot(fig)   
+        ax.hist(proba, bins=10, edgecolor='k')
+        ax.axvline(threshold, color='red', linestyle='--')
+        ax.set_xlabel("Predicted Probability")
+        ax.set_ylabel("Frequency")
+        st.pyplot(fig)
   
 
         
