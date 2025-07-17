@@ -324,12 +324,15 @@ elif page == "Prediction":
         
 
         # ✅ Automatic Threshold Suggestion
-        proba_temp = pipeline.predict_proba(df_input)[:,1]
-        fpr, tpr, thresholds = roc_curve((proba_temp>0.5).astype(int), proba_temp)
-        youden_j = tpr - fpr; optimal_threshold = thresholds[np.argmax(youden_j)]
-        st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
-        if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold)
-        # 
+       
+         # Plot
+        sorted_idx = result.importances_mean.argsort()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.barh(X_background.columns[sorted_idx], result.importances_mean[sorted_idx])
+        ax.set_title("Permutation Importance (Based on Sample)")
+        plt.tight_layout()
+        st.pyplot(fig)    
+         
         #✅ Prediction
         proba = pipeline.predict_proba(df_input)[:, 1]
         prediction = (proba > threshold).astype(int)
