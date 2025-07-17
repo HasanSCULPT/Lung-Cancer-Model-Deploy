@@ -106,7 +106,7 @@ background_data = {
     "CHRONIC DISEASE": [0, 1, 0, 1]
 }
 
-X_background = pd.DataFrame(background_data)
+
 # ✅ Expected Features
 expected_features = [
     "AGE", "GENDER", "SMOKING", "YELLOW_FINGERS", "ANXIETY", "PEER_PRESSURE",
