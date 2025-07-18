@@ -213,13 +213,7 @@ else:
         st.pyplot(fig)
 
         # ✅ SHAP Explanation (optional)
-        if enable_shap:
-            st.write("### 🔍 SHAP Explanation")
-            explainer = shap.KernelExplainer(pipeline.predict_proba, np.zeros((1, len(feature_names))))
-            shap_values = explainer.shap_values(row, nsamples=100)
-            shap.initjs()
-            st.pyplot(shap.force_plot(explainer.expected_value[1], shap_values[1], row))
-
+        
         # ✅ Download Buttons
         result_df = pd.DataFrame({
             "Prediction": ["LUNG CANCER" if pred else "NO LUNG CANCER"],
