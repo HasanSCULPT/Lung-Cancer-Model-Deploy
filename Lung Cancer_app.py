@@ -59,7 +59,7 @@ def set_png_as_page_bg(png_file):
     except FileNotFoundError:
         st.warning("⚠ Background image not found. Skipping...")
         
-set_png_as_page_bg("feathered_bg.png")  # Update file name if needed
+set_png_as_page_bg("background.png")  # Update file name if needed
 
 # -----------------------------
 # Load Model & Features
@@ -97,7 +97,7 @@ elif page == "Terms":
     st.write("This tool is for educational purposes only and does not replace medical advice.")
 else:
     # Prediction Page
-    st.header("🩺 Lung Cancer Prediction")
+    st.header("Lung Cancer Prediction")
 
     # -------------------------
     # Upload CSV
