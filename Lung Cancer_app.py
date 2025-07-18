@@ -352,10 +352,14 @@ elif page == "Prediction":
         df_input = df_input[feature_names]
         
      # ✅ Optimal Threshold Suggestion
+        # Option 2: ROC Curve Youden J
         fpr, tpr, thresholds = roc_curve((proba > 0.5).astype(int), proba)
-        youden_j = tpr - fpr; best_idx = np.argmax(youden_j); optimal_threshold = thresholds[best_idx]
-        st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
-        if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold); st.success(f"✅ Threshold updated to {threshold:.2f}")
+        youden_j = tpr - fpr
+        optimal_threshold = thresholds[np.argmax(youden_j)]
+        st.info(f"📈 ROC-based Suggested Threshold: {optimal_threshold:.2f}")
+        if st.button("Apply ROC Threshold"):
+            threshold = float(optimal_threshold)
+            st.success(f"✅ Threshold updated to {threshold:.2f}")
 
         
         #✅ Prediction
@@ -430,18 +434,7 @@ elif page == "Prediction":
         ax.set_title("Feature Importance (Static)")
         st.pyplot(fig)
 
-        # ✅ Optional Live Calculation
-        if st.checkbox("Show Live Permutation Importance"):
-            try:
-                result = permutation_importance(pipeline, X_background, [0,1,0,1], scoring='accuracy', n_repeats=5, random_state=42)
-                sorted_idx = result.importances_mean.argsort()
-                fig2, ax2 = plt.subplots()
-                ax2.barh(np.array(expected_features)[sorted_idx], result.importances_mean[sorted_idx])
-                ax2.set_title("Live Permutation Importance")
-                st.pyplot(fig2)
-            except Exception as e:
-                st.error(f"Failed: {str(e)}")
-        
+       
 
         # ✅ Export PDF
         pdf = FPDF(); pdf.add_page(); pdf.set_font("Arial",size=12)
