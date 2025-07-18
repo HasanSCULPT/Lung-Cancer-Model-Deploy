@@ -352,7 +352,7 @@ elif page == "Prediction":
         df_input = df_input[feature_names]
         
       # ✅ Automatic Threshold Suggestions
-       st.write("### 🔍 Automatic Threshold Suggestions")
+    st.write("### 🔍 Automatic Threshold Suggestions")
        fpr, tpr, thresholds = roc_curve(preds, probs)
        youden_j = tpr - fpr
        optimal_threshold = thresholds[np.argmax(youden_j)]
