@@ -331,6 +331,10 @@ elif page == "Prediction":
         df_input = pd.read_csv(uploaded_file)
         st.write("### Preview of Uploaded Data"); st.dataframe(df_input.head())
 
+#  ----------------------------
+#   ✅ # BATCH SECTION 
+#  ----------------------------
+        
         # ✅ Data Cleaning
         required_cols = ['AGE','GENDER','SMOKING','ANXIETY','ALCOHOL CONSUMING','PEER_PRESSURE','COUGHING','SHORTNESS OF BREATH']
         for col in required_cols:
@@ -384,10 +388,6 @@ elif page == "Prediction":
         st.pyplot(fig)   
         
 
-     # Probability Distribution Plot
-        
-  
-
     # ✅ Individual Prediction
     st.write("---"); st.write(f"### {tr['individual_entry']}")
     age = st.number_input("Age",0,100,50); gender = st.selectbox("Gender",["Male","Female"])
@@ -415,19 +415,22 @@ elif page == "Prediction":
         st.pyplot(fig)
 
         # ✅ Permutation Importance Toggle
-        if st.checkbox("Show Permutation Importance"):
-            try:
-                result = permutation_importance(pipeline, df_input, [pred], n_repeats=5, random_state=42)
-                sorted_idx = result.importances_mean.argsort()[::-1]
-                fig2, ax2 = plt.subplots()
-                ax2.barh(np.array(expected_features)[sorted_idx], result.importances_mean[sorted_idx])
-                st.pyplot(fig2)
-            except:
-                
-                st.warning("Live calculation failed. Showing static importance chart.")
-                fig3, ax3 = plt.subplots()
-                ax3.barh(importance_data["Feature"], importance_data["Importance"])
-                st.pyplot(fig3)
+        # ✅ Live Permutation Importance Section
+    if st.checkbox("Show Live Permutation Importance"):
+        try:
+            result = permutation_importance(
+                pipeline, X_background, [0, 1, 0, 1], scoring='accuracy', n_repeats=5, random_state=42
+            )
+            sorted_idx = result.importances_mean.argsort()
+            fig, ax = plt.subplots()
+            ax.barh(np.array(expected_features)[sorted_idx], result.importances_mean[sorted_idx])
+            ax.set_title("Live Permutation Importance")
+            st.pyplot(fig)
+        except:
+            st.warning("Live calculation failed. Showing static chart.")
+            fig, ax = plt.subplots(figsize=(8, 6))
+            ax.barh(importance_data["Feature"], importance_data["Importance"])
+            ax.set_title("Static Permutation Importance")
 
 
         # ✅ Static Permutation Plot
