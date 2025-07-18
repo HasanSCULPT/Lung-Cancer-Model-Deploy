@@ -353,6 +353,12 @@ elif page == "Prediction":
         
 
         # ✅ Automatic Threshold Suggestion
+         t.write("### 🔍 Automatic Threshold Suggestions")
+         fpr, tpr, thresholds = roc_curve(preds, probs)
+         youden_j = tpr - fpr
+         optimal_threshold = thresholds[np.argmax(youden_j)]
+         st.info(f"ROC-Optimal Threshold: {optimal_threshold:.2f}")
+
         
         #✅ Prediction
         proba = pipeline.predict_proba(df_input)[:, 1]
