@@ -375,7 +375,9 @@ elif page == "Prediction":
         ax.hist(proba, bins=10, edgecolor='k')
         ax.axvline(threshold, color='red', linestyle='--')
         st.pyplot(fig)   
-        
+#----------------------------
+#   #INDIVIDUAL PREDICTION SECTION 
+# ----------------------------     
 
     # ✅ Individual Prediction
     st.write("---"); st.write(f"### {tr['individual_entry']}")
