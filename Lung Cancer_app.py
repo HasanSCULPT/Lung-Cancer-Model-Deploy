@@ -412,7 +412,7 @@ if st.checkbox("Show Permutation Importance", key="perm_importance_toggle"):
             "Prediction": ["LUNG CANCER" if pred else "NO LUNG CANCER"],
             "Probability": [prob]
         })
-        st.download_button("📥 Download Result (CSV)", result_df.to_csv(index=False), "prediction_result.csv", "text/csv")
+        st.download_button("📥 Download Result (PDF)", result_df.to_csv(index=False), "prediction_result.csv", "text/PDF")
 
 
         # ✅ Export PDF
