@@ -80,32 +80,7 @@ set_png_as_page_bg("background.png")
 
 # ✅ Load Model & Features
 pipeline = joblib.load("lung_cancer_pipeline.pkl")
-feature_names = joblib.load("feature_names.pkl")
-# Sample background data (hardcoded or load from CSV in your repo)
-# ✅ Background sample for SHAP & Permutation
-background_data = {
-    "SYMPTOM_SCORE": [3, 5, 2, 4],
-    "LIFESTYLE_SCORE": [1, 2, 1, 3],
-    "SHORTNESS OF BREATH": [1, 0, 1, 1],
-    "SWALLOWING DIFFICULTY": [0, 1, 0, 1],
-    "ALCOHOL CONSUMING": [1, 0, 1, 0],
-    "ANXIETY": [0, 1, 0, 1],
-    "COUGHING": [1, 1, 0, 1],
-    "WHEEZING": [1, 1, 1, 0],
-    "SMOKING": [1, 0, 1, 0],
-    "GENDER": [1, 0, 1, 1],
-    "AGE_GROUP_Senior": [0, 1, 0, 1],
-    "AGE": [55, 65, 45, 60],
-    "YELLOW_FINGERS": [1, 0, 1, 0],
-    "PEER_PRESSURE": [0, 1, 0, 1],
-    "CHEST PAIN": [1, 0, 1, 0],
-    "LIFESTYLE_RISK": [2, 3, 1, 4],
-    "ALLERGY": [0, 1, 0, 1],
-    "FATIGUE": [1, 0, 1, 0],
-    "AGE_GROUP_Middle-aged": [1, 0, 1, 0],
-    "CHRONIC DISEASE": [0, 1, 0, 1]
-}
-X_background = pd.DataFrame(background_data)
+
 # ✅ Expected Features
 expected_features = [
     "AGE", "GENDER", "SMOKING", "YELLOW_FINGERS", "ANXIETY", "PEER_PRESSURE",
@@ -353,14 +328,7 @@ elif page == "Prediction":
         
      # ✅ Optimal Threshold Suggestion
         # Option 2: ROC Curve Youden J
-        fpr, tpr, thresholds = roc_curve((proba > 0.5).astype(int), proba)
-        youden_j = tpr - fpr
-        optimal_threshold = thresholds[np.argmax(youden_j)]
-        st.info(f"📈 ROC-based Suggested Threshold: {optimal_threshold:.2f}")
-        if st.button("Apply ROC Threshold"):
-            threshold = float(optimal_threshold)
-            st.success(f"✅ Threshold updated to {threshold:.2f}")
-
+        
         
         #✅ Prediction
         proba = pipeline.predict_proba(df_input)[:, 1]
