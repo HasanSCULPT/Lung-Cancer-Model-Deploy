@@ -353,22 +353,7 @@ elif page == "Prediction":
         
 
         # ✅ Automatic Threshold Suggestion
-        if st.checkbox("Show Live Permutation Importance"):
-    try:
-        result = permutation_importance(pipeline, X_background, [0, 1, 0, 1], scoring='accuracy', n_repeats=5, random_state=42)
-        sorted_idx = result.importances_mean.argsort()
-        fig, ax = plt.subplots()
-        ax.barh(np.array(expected_features)[sorted_idx], result.importances_mean[sorted_idx])
-        ax.set_title("Live Permutation Importance")
-        st.pyplot(fig)
-    except Exception as e:
-        st.warning("Live calculation failed. Showing static chart.")
-        fig, ax = plt.subplots(figsize=(8, 6))
-        ax.barh(importance_data["Feature"], importance_data["Importance"])
-        st.pyplot(fig)
-           
-
-         
+        
         #✅ Prediction
         proba = pipeline.predict_proba(df_input)[:, 1]
         prediction = (proba > threshold).astype(int)
