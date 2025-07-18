@@ -351,13 +351,12 @@ elif page == "Prediction":
             if col not in df_input: df_input[col] = 0
         df_input = df_input[feature_names]
         
-      # ✅ Automatic Threshold Suggestions
-    st.write("### 🔍 Automatic Threshold Suggestions")
-       fpr, tpr, thresholds = roc_curve(preds, probs)
-       youden_j = tpr - fpr
-       optimal_threshold = thresholds[np.argmax(youden_j)]
-       st.info(f"ROC-Optimal Threshold: {optimal_threshold:.2f}")
-        
+     # ✅ Optimal Threshold Suggestion
+        fpr, tpr, thresholds = roc_curve((proba > 0.5).astype(int), proba)
+        youden_j = tpr - fpr; best_idx = np.argmax(youden_j); optimal_threshold = thresholds[best_idx]
+        st.info(f"🔍 Suggested Threshold: **{optimal_threshold:.2f}**")
+        if st.button("Apply Suggested Threshold"): threshold = float(optimal_threshold); st.success(f"✅ Threshold updated to {threshold:.2f}")
+
         
         #✅ Prediction
         proba = pipeline.predict_proba(df_input)[:, 1]
