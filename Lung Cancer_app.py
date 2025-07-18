@@ -12,35 +12,6 @@
 # File: lung_cancer_app.py
 # =======================================
 
-import pandas as pd
-import joblib
-import numpy as np
-import matplotlib.pyplot as plt
-import shap
-import streamlit as st
-import base64
-import smtplib
-import io
-import plotly.express as px
-from email.message import EmailMessage
-from fpdf import FPDF
-from sklearn.metrics import roc_curve
-from sklearn.metrics import recall_score
-from sklearn.inspection import permutation_importance
-
-# 📁 Folder Structure:
-# Lung-Cancer-Model-Deploy/
-# ├─ lung_cancer_app.py
-# ├─ lung_cancer_pipeline.pkl
-# ├─ logo.png
-# ├─ feathered_bg.png   ✅ ← background image 
-# ├─ feathered_bg.png
-# └─ requirements.txt
-
-
-# =======================================
-# File: lung_cancer_app.py
-# =======================================
 
 # =========================================================
 # ✅ Lung Cancer Diagnostic App (Streamlit)
