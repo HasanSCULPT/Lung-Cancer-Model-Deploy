@@ -80,6 +80,7 @@ set_png_as_page_bg("background.png")
 
 # ✅ Load Model & Features
 pipeline = joblib.load("lung_cancer_pipeline.pkl")
+feature_names = joblib.load("feature_names.pkl")
 
 # ✅ Expected Features
 expected_features = [
