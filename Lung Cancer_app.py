@@ -399,7 +399,7 @@ elif page == "Prediction":
                 row[col] = 0
         row = row[feature_names]
 
-       prob = pipeline.predict_proba(row)[0][1]
+        prob = pipeline.predict_proba(row)[0][1]
         pred = int(prob > threshold)
         st.success(f"{'🛑 LUNG CANCER' if pred == 1 else '✅ NO LUNG CANCER'} (Probability: {prob:.2f})")
 
