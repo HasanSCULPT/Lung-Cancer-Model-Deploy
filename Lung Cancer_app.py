@@ -72,7 +72,7 @@ feature_names = joblib.load("feature_names.pkl")
 # -----------------------------
 st.sidebar.title("🔍 Settings")
 threshold = st.sidebar.slider("Prediction Threshold", 0.0, 1.0, 0.5, 0.01)
-enable_shap = st.sidebar.checkbox("Enable SHAP for Individual Prediction", value=False)
+enable_shap = st.sidebar.checkbox("Enable IMPORTANCE for Individual Prediction", value=False)
 
 # -----------------------------
 # App Title
@@ -214,11 +214,29 @@ else:
 
         # ✅ SHAP Explanation (optional)
         # SHAP Explanation
-        explainer = shap.KernelExplainer(pipeline.predict_proba, np.zeros((1, len(feature_names))))
-        shap_values = explainer.shap_values(row)
-        st.write("### SHAP Explanation")
-        shap.force_plot(explainer.expected_value[1], shap_values[1], row, matplotlib=True)
-        st.pyplot()
+         if st.checkbox("Show Live Permutation Importance"):
+        try:
+            result = permutation_importance(
+                pipeline, X_background, [0, 1, 0, 1], scoring='accuracy', n_repeats=5, random_state=42
+            )
+            sorted_idx = result.importances_mean.argsort()
+            fig, ax = plt.subplots()
+            ax.barh(np.array(expected_features)[sorted_idx], result.importances_mean[sorted_idx])
+            ax.set_title("Live Permutation Importance")
+            st.pyplot(fig)
+        except:
+            st.warning("Live calculation failed. Showing static chart.")
+            fig, ax = plt.subplots(figsize=(8, 6))
+            ax.barh(importance_data["Feature"], importance_data["Importance"])
+            ax.set_title("Static Permutation Importance")
+
+
+        # ✅ Static Permutation Plot
+        fig, ax = plt.subplots()
+        ax.barh(importance_data["Feature"], importance_data["Importance"])
+        ax.set_title("Feature Importance (Static)")
+        st.pyplot(fig)
+
         # ✅ Download Buttons
         result_df = pd.DataFrame({
             "Prediction": ["LUNG CANCER" if pred else "NO LUNG CANCER"],
