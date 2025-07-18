@@ -45,6 +45,17 @@ from sklearn.inspection import permutation_importance
 #    ✅ Background image & logo supported
 # =========================================================
 
+import streamlit as st
+import pandas as pd
+import numpy as np
+import joblib
+import matplotlib.pyplot as plt
+import base64
+import smtplib
+from email.message import EmailMessage
+from sklearn.inspection import permutation_importance
+from sklearn.metrics import roc_curve
+from fpdf import FPDF
 
 # ----------------------------
 # ✅ Streamlit Configuration
@@ -81,31 +92,6 @@ set_png_as_page_bg("background.png")
 # ✅ Load Model & Features
 pipeline = joblib.load("lung_cancer_pipeline.pkl")
 feature_names = joblib.load("feature_names.pkl")
-# Sample background data (hardcoded or load from CSV in your repo)
-# ✅ Background sample for SHAP & Permutation
-background_data = {
-    "SYMPTOM_SCORE": [3, 5, 2, 4],
-    "LIFESTYLE_SCORE": [1, 2, 1, 3],
-    "SHORTNESS OF BREATH": [1, 0, 1, 1],
-    "SWALLOWING DIFFICULTY": [0, 1, 0, 1],
-    "ALCOHOL CONSUMING": [1, 0, 1, 0],
-    "ANXIETY": [0, 1, 0, 1],
-    "COUGHING": [1, 1, 0, 1],
-    "WHEEZING": [1, 1, 1, 0],
-    "SMOKING": [1, 0, 1, 0],
-    "GENDER": [1, 0, 1, 1],
-    "AGE_GROUP_Senior": [0, 1, 0, 1],
-    "AGE": [55, 65, 45, 60],
-    "YELLOW_FINGERS": [1, 0, 1, 0],
-    "PEER_PRESSURE": [0, 1, 0, 1],
-    "CHEST PAIN": [1, 0, 1, 0],
-    "LIFESTYLE_RISK": [2, 3, 1, 4],
-    "ALLERGY": [0, 1, 0, 1],
-    "FATIGUE": [1, 0, 1, 0],
-    "AGE_GROUP_Middle-aged": [1, 0, 1, 0],
-    "CHRONIC DISEASE": [0, 1, 0, 1]
-}
-X_background = pd.DataFrame(background_data)
 
 # ✅ Expected Features
 expected_features = [
@@ -182,8 +168,7 @@ Important: For accurate batch predictions, datasets must be cleaned and features
             "sidebar_title": "Navigation",
             "individual_entry": "Veuillez entrer les informations médicales du patient ci-dessous pour prédire la probabilité d'un cancer du poumon.",
             "about_title": "📘 À propos de nous",
-            "about_desc": """Cette application, développée par HasanSCULPT, facilite la prédiction préliminaire du risque de cancer du poumon grâce à l'apprentissage automatique d'ensemble, basé sur l'analyse des symptômes et le mode de vie."""
-            ,
+            "about_desc": """Cette application, développée par HasanSCULPT, facilite la prédiction préliminaire du risque de cancer du poumon grâce à l'apprentissage automatique d'ensemble, basé sur l'analyse des symptômes et le mode de vie.""",
             "contact_title": "📧 Contactez-nous",
             "terms_title": "📜 Conditions générales",
             "terms_text": "Avertissement : Cet outil est uniquement destiné à des fins éducatives et diagnostiques. Il ne remplace pas un avis médical professionnel certifié."
@@ -257,8 +242,9 @@ Important: For accurate batch predictions, datasets must be cleaned and features
     }
     return translations.get(language, translations["en"])
 
-
+# ----------------------------
 # 🌐 Language Selector
+# ----------------------------
 LANG_OPTIONS = {
     "en": "English",
     "fr": "Français",
@@ -272,9 +258,8 @@ selected_lang = st.sidebar.selectbox(
     format_func=lambda x: LANG_OPTIONS[x],
     key="lang"
 )
-
-# 🌐 Retrieve selected translation
 tr = get_translation(selected_lang)
+
 # ----------------------------
 # ✅ Header Section
 # ----------------------------
@@ -282,18 +267,11 @@ st.image("logo.png", width=100)
 st.title(f"🔬 {tr['title']}")
 st.write(f"## {tr['subtitle']}")
 
-# Sidebar Navigation
+# ----------------------------
+# ✅ Sidebar Navigation
+# ----------------------------
 page = st.sidebar.selectbox(tr['sidebar_title'], ["Prediction", "About", "Contact", "Terms"], key="page")
 
-# Email input
-# Email sender (placeholder)
-email = st.text_input(tr['enter_email'], key="email")
-if email and st.button(tr['send_email'], key="email_btn"):
-    success = send_email(email, tr['title'], "See attached result.", "prediction_result.pdf")
-    if success:
-        st.success(tr['email_success'])
-    else:
-        st.error(tr['email_fail'])
 # ----------------------------
 # ✅ Email Setup (Placeholder)
 # ----------------------------
@@ -317,55 +295,72 @@ def send_email(recipient_email, subject, body, attachment_path):
 # ✅ Page Routing
 # ----------------------------
 if page == "About":
-    st.title(tr['about_title']); st.write(tr['about_desc'])
+    st.title(tr['about_title'])
+    st.write(tr['about_desc'])
+
 elif page == "Contact":
-    st.title(tr['contact_title']); st.write("Email: support@lungdiagnosis.ai")
+    st.title(tr['contact_title'])
+    st.write("Email: support@lungdiagnosis.ai")
+
 elif page == "Terms":
-    st.title(tr['terms_title']); st.write(tr['terms_text'])
+    st.title(tr['terms_title'])
+    st.write(tr['terms_text'])
+
 elif page == "Prediction":
     # Sidebar Threshold
     st.sidebar.subheader("🛠 Adjust Classification Threshold")
     threshold = st.sidebar.slider("Prediction Threshold", 0.0, 1.0, 0.5, 0.01)
 
+    # Email input
+    email = st.text_input(tr['enter_email'], key="email")
+    if email and st.button(tr['send_email'], key="email_btn"):
+        success = send_email(email, tr['title'], "See attached result.", "prediction_result.pdf")
+        if success:
+            st.success(tr['email_success'])
+        else:
+            st.error(tr['email_fail'])
+
     uploaded_file = st.sidebar.file_uploader(tr['upload_csv'], type="csv", key="csv")
+    
+    # ----------------------------
+    # ✅ Batch Prediction Section
+    # ----------------------------
     if uploaded_file:
         df_input = pd.read_csv(uploaded_file)
-        st.write("### Preview of Uploaded Data"); st.dataframe(df_input.head())
+        st.write("### Preview of Uploaded Data")
+        st.dataframe(df_input.head())
 
-#  ----------------------------
-#   ✅ # BATCH SECTION 
-#  ----------------------------
-        
         # ✅ Data Cleaning
         required_cols = ['AGE','GENDER','SMOKING','ANXIETY','ALCOHOL CONSUMING','PEER_PRESSURE','COUGHING','SHORTNESS OF BREATH']
         for col in required_cols:
-            if col not in df_input.columns: df_input[col] = 0
+            if col not in df_input.columns:
+                df_input[col] = 0
         for col in df_input.columns:
             if df_input[col].isnull().sum() > 0:
                 if df_input[col].dtype in ['int64','float64']:
                     df_input[col].fillna(df_input[col].mean(), inplace=True)
                 else:
                     df_input[col].fillna(df_input[col].mode()[0], inplace=True)   
+
         # Align features
         df_input = pd.get_dummies(df_input, drop_first=True)
         for col in feature_names:
-            if col not in df_input: df_input[col] = 0
+            if col not in df_input:
+                df_input[col] = 0
         df_input = df_input[feature_names]
-        
-     # # ✅ Automatic Threshold Suggestions
+
+        # ✅ Automatic Threshold Suggestion
         st.write("### 🔍 Automatic Threshold Suggestions")
-        fpr, tpr, thresholds = roc_curve(preds, probs)
+        probs = pipeline.predict_proba(df_input)[:, 1]
+        fpr, tpr, thresholds = roc_curve((probs > 0.5).astype(int), probs)
         youden_j = tpr - fpr
         optimal_threshold = thresholds[np.argmax(youden_j)]
         st.info(f"ROC-Optimal Threshold: {optimal_threshold:.2f}")
 
-        
-        #✅ Prediction
-        proba = pipeline.predict_proba(df_input)[:, 1]
-        prediction = (proba > threshold).astype(int)
-
+        # ✅ Predictions
+        prediction = (probs > threshold).astype(int)
         df_output = df_input.copy()
-        df_output["Probability"] = proba
+        df_output["Probability"] = probs
         df_output["Prediction"] = prediction
 
         st.write(f"### {tr['prediction_results']}")
@@ -374,74 +369,88 @@ elif page == "Prediction":
 
         # Histogram
         fig, ax = plt.subplots()
-        ax.hist(proba, bins=10, edgecolor='k')
+        ax.hist(probs, bins=10, edgecolor='k')
         ax.axvline(threshold, color='red', linestyle='--')
-        st.pyplot(fig)   
-#----------------------------
-#   #INDIVIDUAL PREDICTION SECTION 
-# ----------------------------     
-
-    # ✅ Individual Prediction
-    st.write("---"); st.write(f"### {tr['individual_entry']}")
-    age = st.number_input("Age",0,100,50); gender = st.selectbox("Gender",["Male","Female"])
-    smoking = st.selectbox("Smoking",[0,1]); anxiety = st.selectbox("Anxiety",[0,1])
-    alcohol = st.selectbox("Alcohol Consuming",[0,1]); peer_pressure = st.selectbox("Peer Pressure",[0,1])
-    cough = st.selectbox("Coughing",[0,1]); short_breath = st.selectbox("Shortness of Breath",[0,1])
-    symptom_score = st.slider("SYMPTOM SCORE",0,10,5); lifestyle_score = st.slider("LIFESTYLE SCORE",0,5,2)
-
-    if st.button("Predict Individual"):
-        row = pd.DataFrame({'AGE':[age],'GENDER':[1 if gender=="Male" else 0],'SMOKING':[smoking],
-                            'ANXIETY':[anxiety],'ALCOHOL CONSUMING':[alcohol],'PEER_PRESSURE':[peer_pressure],
-                            'COUGHING':[cough],'SHORTNESS OF BREATH':[short_breath],
-                            'SYMPTOM_SCORE':[symptom_score],'LIFESTYLE_SCORE':[lifestyle_score]})
-        for col in feature_names:
-            if col not in row: row[col]=0
-        row = row[feature_names]
-
-        prob = pipeline.predict_proba(row)[0][1]; pred = int(prob>threshold)
-        st.success(f"{'🛑 LUNG CANCER' if pred==1 else '✅ NO LUNG CANCER'} (Probability: {prob:.2f})")
-
-        # ✅ Confidence Chart
-        fig, ax = plt.subplots(); bars = ax.bar(["No Lung Cancer","Lung Cancer"],[1-prob,prob],color=["green","red"])
-        ax.set_ylim(0,1); ax.set_ylabel("Probability"); ax.set_title("Prediction Confidence")
-        for bar in bars: yval=bar.get_height(); ax.text(bar.get_x()+bar.get_width()/2.0,yval+0.02,f"{yval:.2f}",ha='center')
         st.pyplot(fig)
 
-        
-        # ✅ Permutation Importance Toggle (Single Toggle)
-if st.checkbox("Show Permutation Importance", key="perm_importance_toggle"):
-    try:
-        # Live Calculation
-        st.info("Calculating live permutation importance... please wait.")
-        result = permutation_importance(
-            pipeline, df_input, pipeline.predict(df_input),
-            n_repeats=5, random_state=42
-        )
-        sorted_idx = result.importances_mean.argsort()[::-1]
-        fig_live, ax_live = plt.subplots(figsize=(8, 6))
-        ax_live.barh(np.array(expected_features)[sorted_idx], result.importances_mean[sorted_idx], color="skyblue")
-        ax_live.set_title("Live Permutation Importance")
-        plt.tight_layout()
-        st.pyplot(fig_live)
-    except Exception as e:
-        # Fallback to Static Chart
-        st.warning("Live calculation failed. Showing static precomputed importance chart.")
-        fig_static, ax_static = plt.subplots(figsize=(8, 6))
-        ax_static.barh(importance_data["Feature"], importance_data["Importance"], color="orange")
-        ax_static.set_title("Static Permutation Importance (Precomputed)")
-        plt.tight_layout()
-        st.pyplot(fig_static)
+    # ----------------------------
+    # ✅ Individual Prediction Section
+    # ----------------------------
+    st.write("---")
+    st.write(f"### {tr['individual_entry']}")
+    age = st.number_input("Age", 0, 100, 50)
+    gender = st.selectbox("Gender", ["Male", "Female"])
+    smoking = st.selectbox("Smoking", [0, 1])
+    anxiety = st.selectbox("Anxiety", [0, 1])
+    alcohol = st.selectbox("Alcohol Consuming", [0, 1])
+    peer_pressure = st.selectbox("Peer Pressure", [0, 1])
+    cough = st.selectbox("Coughing", [0, 1])
+    short_breath = st.selectbox("Shortness of Breath", [0, 1])
+    symptom_score = st.slider("SYMPTOM SCORE", 0, 10, 5)
+    lifestyle_score = st.slider("LIFESTYLE SCORE", 0, 5, 2)
 
-       # ✅ Download Buttons
-        
-        
+    if st.button("Predict Individual"):
+        row = pd.DataFrame({'AGE': [age], 'GENDER': [1 if gender == "Male" else 0], 'SMOKING': [smoking],
+                            'ANXIETY': [anxiety], 'ALCOHOL CONSUMING': [alcohol], 'PEER_PRESSURE': [peer_pressure],
+                            'COUGHING': [cough], 'SHORTNESS OF BREATH': [short_breath],
+                            'SYMPTOM_SCORE': [symptom_score], 'LIFESTYLE_SCORE': [lifestyle_score]})
+        for col in feature_names:
+            if col not in row:
+                row[col] = 0
+        row = row[feature_names]
 
+       prob = pipeline.predict_proba(row)[0][1]
+        pred = int(prob > threshold)
+        st.success(f"{'🛑 LUNG CANCER' if pred == 1 else '✅ NO LUNG CANCER'} (Probability: {prob:.2f})")
+
+        # ✅ Confidence Chart
+        fig, ax = plt.subplots()
+        bars = ax.bar(["No Lung Cancer", "Lung Cancer"], [1 - prob, prob], color=["green", "red"])
+        ax.set_ylim(0, 1)
+        ax.set_ylabel("Probability")
+        ax.set_title("Prediction Confidence")
+        for bar in bars:
+            yval = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width() / 2.0, yval + 0.02, f"{yval:.2f}", ha='center')
+        st.pyplot(fig)
+
+        # ✅ Download Buttons
+        result_df = pd.DataFrame({
+            "Prediction": ["LUNG CANCER" if pred else "NO LUNG CANCER"],
+            "Probability": [prob]
+        })
+        st.download_button("📥 Download Result (CSV)", result_df.to_csv(index=False), "prediction_result.csv", "text/csv")
 
         # ✅ Export PDF
-        pdf = FPDF(); pdf.add_page(); pdf.set_font("Arial",size=12)
-        pdf.cell(200,10,txt="Lung Cancer Prediction Result",ln=True,align='C')
-        pdf.cell(200,10,txt=f"Prediction: {'LUNG CANCER' if pred else 'NO LUNG CANCER'}",ln=True)
-        pdf.cell(200,10,txt=f"Probability: {prob:.2f}",ln=True)
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+        pdf.cell(200, 10, txt="Lung Cancer Prediction Result", ln=True, align='C')
+        pdf.cell(200, 10, txt=f"Prediction: {'LUNG CANCER' if pred else 'NO LUNG CANCER'}", ln=True)
+        pdf.cell(200, 10, txt=f"Probability: {prob:.2f}", ln=True)
         pdf_bytes = pdf.output(dest='S').encode('latin-1')
         st.download_button(label="📥 Download PDF", data=pdf_bytes, file_name="prediction_result.pdf", mime="application/pdf")
 
+    # ----------------------------
+    # ✅ Permutation Importance Toggle
+    # ----------------------------
+    if st.checkbox("Show Permutation Importance", key="perm_importance_toggle"):
+        try:
+            st.info("Calculating live permutation importance... please wait.")
+            result = permutation_importance(
+                pipeline, df_input, pipeline.predict(df_input),
+                n_repeats=5, random_state=42
+            )
+            sorted_idx = result.importances_mean.argsort()[::-1]
+            fig_live, ax_live = plt.subplots(figsize=(8, 6))
+            ax_live.barh(np.array(expected_features)[sorted_idx], result.importances_mean[sorted_idx], color="skyblue")
+            ax_live.set_title("Live Permutation Importance")
+            plt.tight_layout()
+            st.pyplot(fig_live)
+        except Exception:
+            st.warning("Live calculation failed. Showing static precomputed importance chart.")
+            fig_static, ax_static = plt.subplots(figsize=(8, 6))
+            ax_static.barh(importance_data["Feature"], importance_data["Importance"], color="orange")
+            ax_static.set_title("Static Permutation Importance (Precomputed)")
+            plt.tight_layout()
+            st.pyplot(fig_static)
