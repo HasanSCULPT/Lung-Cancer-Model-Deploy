@@ -306,10 +306,55 @@ elif page == "Terms":
     st.title(tr['terms_title'])
     st.write(tr['terms_text'])
 
-elif page == "Prediction":
-    # Sidebar Threshold
-    st.sidebar.subheader("🛠 Adjust Classification Threshold")
-    threshold = st.sidebar.slider("Prediction Threshold", 0.0, 1.0, 0.5, 0.01)
+# ----------------------------
+# ✅ Sidebar Threshold Adjustment with Suggestions
+# ----------------------------
+st.sidebar.subheader("🛠 Adjust Classification Threshold")
+
+# Compute probabilities only if file uploaded or show dummy for now
+if 'df_input' in locals():
+    probs = pipeline.predict_proba(df_input)[:, 1]
+    y_true = (probs > 0.5).astype(int)
+
+    # Compute ROC curve and thresholds
+    fpr, tpr, thresholds = roc_curve(y_true, probs)
+
+    # Automatic threshold based on Youden's J statistic
+    youden_j = tpr - fpr
+    roc_optimal_threshold = thresholds[np.argmax(youden_j)]
+
+    # Max Recall threshold (maximize tpr)
+    max_recall_threshold = thresholds[np.argmax(tpr)]
+
+    # Precision-Recall based threshold (maximize precision)
+    from sklearn.metrics import precision_recall_curve, f1_score
+    precision, recall, pr_thresholds = precision_recall_curve(y_true, probs)
+    f1_scores = 2 * precision * recall / (precision + recall)
+    best_f1_idx = np.nanargmax(f1_scores)
+    f1_optimal_threshold = pr_thresholds[best_f1_idx]
+
+    st.write("### 🔍 Suggested Thresholds:")
+    st.info(f"ROC-Optimal Threshold: {roc_optimal_threshold:.2f}")
+    st.write(f"• Max Recall Threshold: {max_recall_threshold:.2f}")
+    st.write(f"• F1-Optimal Threshold: {f1_optimal_threshold:.2f}")
+
+    # Buttons to apply suggestions
+    col1, col2, col3 = st.columns(3)
+    if col1.button("Apply ROC-Optimal"):
+        threshold = round(float(roc_optimal_threshold), 2)
+        st.sidebar.success(f"Applied: {threshold}")
+    if col2.button("Apply Max Recall"):
+        threshold = round(float(max_recall_threshold), 2)
+        st.sidebar.success(f"Applied: {threshold}")
+    if col3.button("Apply F1-Optimal"):
+        threshold = round(float(f1_optimal_threshold), 2)
+        st.sidebar.success(f"Applied: {threshold}")
+
+else:
+    st.warning("Upload data to see suggested thresholds.")
+
+# Manual slider
+threshold = st.sidebar.slider("Prediction Threshold", 0.0, 1.0, 0.5, 0.01)
 
     # Email input
     email = st.text_input(tr['enter_email'], key="email")
