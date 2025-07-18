@@ -408,11 +408,8 @@ if st.checkbox("Show Permutation Importance", key="perm_importance_toggle"):
         st.pyplot(fig_static)
 
        # ✅ Download Buttons
-        result_df = pd.DataFrame({
-            "Prediction": ["LUNG CANCER" if pred else "NO LUNG CANCER"],
-            "Probability": [prob]
-        })
-        st.download_button("📥 Download Result (PDF)", result_df.to_csv(index=False), "prediction_result.csv", "text/PDF")
+        
+        
 
 
         # ✅ Export PDF
