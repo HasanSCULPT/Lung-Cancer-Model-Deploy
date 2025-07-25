@@ -373,8 +373,8 @@ elif page == "Prediction":
     wheezing = st.selectbox("wheezing", [0, 1])
     cough = st.selectbox("Coughing", [0, 1])
     short_breath = st.selectbox("Shortness of Breath", [0, 1])
-    symptom_score = st.slider == ("SYMPTOM SCORE", 0, 10, 5, disabled=True) # ✅ Auto-Updating Sliders
-    lifestyle_score = st.slider == ("LIFESTYLE SCORE", 0, 5, 2, disabled=True)
+    symptom_score = st.slider == ("SYMPTOM SCORE", 0, 10, 5, enabled=True) # ✅ Auto-Updating Sliders
+    lifestyle_score = st.slider == ("LIFESTYLE SCORE", 0, 5, 2, enabled=True)
 
     if st.button("Predict Individual"):
         row = pd.DataFrame({'AGE': [age], 'GENDER': [1 if gender == "Male" else 0], 'SMOKING': [smoking],
