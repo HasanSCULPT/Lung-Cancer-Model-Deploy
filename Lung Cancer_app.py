@@ -373,6 +373,9 @@ elif page == "Prediction":
     wheezing = st.selectbox("wheezing", [0, 1])
     cough = st.selectbox("Coughing", [0, 1])
     short_breath = st.selectbox("Shortness of Breath", [0, 1])
+    # ✅ Auto Calculate Scores
+    SYMPTOM_SCORE = sum([cough, short_breath, wheezing, swallowing, chest_pain])
+    LIFESTYLE_SCORE = sum([smoking, alcohol, peer_pressure])
     symptom_score = st.slider("SYMPTOM SCORE", 0, 10, SYMPTOM_SCORE, disabled=True) # ✅ Auto-Updating Sliders
     lifestyle_score = st.slider("LIFESTYLE SCORE", 0, 5, LIFESTYLE_SCORE, disabled=True)
 
