@@ -369,6 +369,8 @@ elif page == "Prediction":
     anxiety = st.selectbox("Anxiety", [0, 1])
     alcohol = st.selectbox("Alcohol Consuming", [0, 1])
     peer_pressure = st.selectbox("Peer Pressure", [0, 1])
+    yellow_fingers = st.selectbox("yellow fingers", [0, 1])
+    wheezing = st.selectbox("wheezing", [0, 1])
     cough = st.selectbox("Coughing", [0, 1])
     short_breath = st.selectbox("Shortness of Breath", [0, 1])
     symptom_score = st.slider("SYMPTOM SCORE", 0, 10, 5)
